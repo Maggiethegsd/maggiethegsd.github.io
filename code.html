@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aryamaan Borgohain | The Code Lab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;600;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --accent-color: #00e5ff;
+            --accent-secondary: #7000ff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-light: rgba(0, 229, 255, 0.15);
+            --code-bg: #05080f;
+            --keyword: #ff7b72;
+            --string: #a5d6ff;
+            --comment: #8b949e;
+            --function: #d2a8ff;
+            --type: #79c0ff;
+            --number: #f2cc60;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            color: var(--text-main); font-family: var(--font-sans);
+            line-height: 1.6; overflow-x: hidden; background-color: #020202;
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #05080f; border-left: 1px solid var(--border-light); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.6); }
+
+        /* --- BACKGROUND & OVERLAYS --- */
+        .bg-blur {
+            position: fixed;
+            top: -5%; left: -5%; width: 110vw; height: 110vh;
+            background-image: url('assets/poster landscape.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) brightness(0.2);
+            z-index: -4;
+            pointer-events: none;
+        }
+
+        #dust-particles {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -3; pointer-events: none;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: -50%; left: -50%; width: 200vw; height: 200vh;
+            background-color: transparent;
+            background-image:
+                linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(112, 0, 255, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -3;
+            animation: gridPan 40s linear infinite;
+            pointer-events: none;
+        }
+        
+        .grid-vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, transparent 10%, #020202 95%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        @keyframes gridPan {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* --- PAGE TRANSITION OVERLAY --- */
+        .page-transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #020202; z-index: 9999; pointer-events: none;
+            transform: scaleY(0); transform-origin: top;
+        }
+
+        body.entering .page-transition-overlay { animation: wipeDown 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+        body.exiting .page-transition-overlay { animation: wipeUp 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+
+        @keyframes wipeDown { 0% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+        @keyframes wipeUp { 0% { transform: scaleY(0); transform-origin: top; } 100% { transform: scaleY(1); transform-origin: top; } }
+
+        /* --- LAYOUT --- */
+        .layout-wrapper { display: flex; min-height: 100vh; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .container { flex: 1; padding: 2rem; margin-left: 280px; max-width: 1050px; }
+
+        .side-nav {
+            position: fixed; top: 0; bottom: 0; left: 0; width: 280px;
+            display: flex; flex-direction: column; gap: 1rem; padding: 4rem 2rem;
+            background: rgba(5, 8, 15, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-light); z-index: 100;
+        }
+        .nav-brand { display: flex; align-items: center; font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: var(--accent-color); margin-bottom: 2rem; letter-spacing: -0.5px; }
+        .status-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; margin-left: 10px; box-shadow: 0 0 10px var(--accent-color); animation: statusPulse 2s infinite; }
+        @keyframes statusPulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+
+        .nav-link { color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.85rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; padding: 0.4rem 0; }
+        .nav-link:hover { color: var(--accent-color); transform: translateX(5px); text-shadow: 0 0 8px rgba(0,229,255,0.4); }
+
+        h1 { font-family: var(--font-mono); font-size: 3rem; letter-spacing: -1.5px; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,229,255,0.2); display: inline-block; }
+        .blinking-cursor { color: var(--accent-color); animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .glass-panel {
+            background: rgba(5, 8, 15, 0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-light); border-radius: 8px;
+            padding: 2.5rem; margin-bottom: 3rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0,229,255,0.02);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover {
+            border-color: rgba(0, 229, 255, 0.4); 
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(112, 0, 255, 0.05);
+        }
+
+        /* --- CODE STYLING --- */
+        .code-container {
+            background-color: rgba(2, 4, 10, 0.7);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            border-radius: 6px; padding: 1.5rem; overflow-x: auto;
+            margin-top: 1.5rem; box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+            position: relative;
+            transition: border-color 0.3s ease;
+        }
+        .glass-panel:hover .code-container { border-color: rgba(0, 229, 255, 0.25); }
+        
+        pre { font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; color: #c9d1d9; }
+        .kw { color: var(--keyword); } 
+        .str { color: var(--string); } 
+        .cmt { color: var(--comment); font-style: italic; } 
+        .func { color: var(--function); } 
+        .typ { color: var(--type); } 
+        .num { color: var(--number); } 
+
+        .snippet-header { border-left: 2px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1rem; }
+        .snippet-title { font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-main); font-weight: 600; }
+        .snippet-meta { font-size: 0.85rem; color: var(--accent-color); opacity: 0.8; font-family: var(--font-mono); margin-top: 0.25rem; }
+
+        @media (max-width: 1024px) {
+            .layout-wrapper { flex-direction: column; }
+            .side-nav { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; padding: 1.5rem; justify-content: center; border-right: none; border-bottom: 1px solid var(--border-light); }
+            .nav-brand { width: 100%; justify-content: center; text-align: center; margin-bottom: 1rem; }
+            .container { margin-left: auto; margin-right: auto; padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-transition-overlay"></div>
+    <div class="bg-blur"></div>
+    <canvas id="dust-particles"></canvas>
+    <div class="grid-bg"></div>
+    <div class="grid-vignette"></div>
+
+    <div class="layout-wrapper">
+        <nav class="side-nav">
+            <div class="nav-brand">MAGGIETHEGSD_LABS<span class="status-dot"></span></div>
+            <a href="index.html" class="nav-link transition-link"><span>[~]</span> /root</a>
+            <a href="#dynamics" class="nav-link"><span>[f]</span> Dynamics.cpp</a>
+            <a href="#mission" class="nav-link"><span>[f]</span> MissionPlanner.cpp</a>
+            <a href="#body" class="nav-link"><span>[f]</span> CelestialBody.cpp</a>
+            <a href="#encke" class="nav-link"><span>[f]</span> EnckeMethod.cpp</a>
+            <a href="#visualizer" class="nav-link"><span>[f]</span> TelemetryVisualizer.py</a>
+        </nav>
+
+        <main class="container">
+            <header style="margin-bottom: 4rem;">
+
+                <h1>Vault of Code<span class="blinking-cursor">_</span></h1>
+                <p style="color: var(--text-muted); max-width: 600px; font-size: 1.05rem;">
+                    A collection of snippets of code I've written that I think are good.
+                </p>
+            </header>
+
+            <section id="dynamics" class="glass-panel">
+                <div class="snippet-header">
+                    <div class="snippet-title">Iterative Lambert Solver (Lancaster-Blanchard)</div>
+                    <div class="snippet-meta">OrbitForge // Dynamics.cpp</div>
+                </div>
+                <div class="code-container">
+<pre><code><span class="cmt">// iteratively solve lamberts problem to figure out velocity required to intercept body with time interval t2-t1</span>
+<span class="typ">Vector3</span> <span class="func">solve_lambert</span>(<span class="typ">Vector3</span> ri, <span class="typ">Vector3</span> rf, <span class="typ">Vector3</span> pgb_r, <span class="kw">double</span> M, <span class="kw">double</span> t1, <span class="kw">double</span> t2, <span class="kw">double</span> G)
+{
+    <span class="cmt">// set primary gravitational body as origin (frame of ref)</span>
+    <span class="cmt">// dirn = target - origin</span>
+    ri -= pgb_r;
+    rf -= pgb_r;
+
+    <span class="kw">double</span> r1 = ri.<span class="func">magnitude</span>();
+    <span class="kw">double</span> r2 = rf.<span class="func">magnitude</span>();
+
+    <span class="typ">Vector3</span> normal = <span class="typ">Vector3</span>::<span class="func">cross</span>(ri, rf);
+    <span class="kw">if</span> (normal.<span class="func">magnitude</span>() &lt; <span class="num">1e-5</span>) {
+        <span class="cmt">// Vectors are 180 degrees apart. Force the standard 2D plane.</span>
+        normal = <span class="typ">Vector3</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>); 
+    } 
+    <span class="kw">else</span> {
+        normal = normal.<span class="func">normalized</span>();
+    }
+
+    <span class="kw">double</span> c = (rf-ri).<span class="func">magnitude</span>();
+
+    <span class="kw">double</span> s = (r1+r2+c)/<span class="num">2</span>;
+    <span class="kw">double</span> mu = G*M;
+
+    <span class="kw">double</span> theta = <span class="typ">Vector3</span>::<span class="func">angle_acos</span>(ri, rf);
+
+    <span class="cmt">//Determine direction of transfer, prograde or retrograde</span>
+    <span class="kw">if</span> (<span class="typ">Vector3</span>::<span class="func">cross</span>(ri, rf).z &lt; <span class="num">0</span>) {
+        theta = <span class="num">2.0</span>*<span class="num">3.141592</span>-theta;
+    }
+
+    <span class="kw">double</span> q = <span class="func">sqrt</span>(r1 * r2)*<span class="func">cos</span>(theta/<span class="num">2</span>)/s;
+    <span class="kw">double</span> del_t = t2 - t1;
+    <span class="cmt">// normalized time of flight</span>
+    <span class="kw">double</span> T_target = <span class="func">sqrt</span>(<span class="num">8.0</span>*mu/(s*s*s)) * del_t;
+
+    <span class="cmt">// use newton raphson method to estimate better roots till close to desired time with some tolerance</span>
+    <span class="cmt">// initial guess</span>
+    <span class="kw">double</span> x = <span class="num">0.5</span>;
+    <span class="kw">double</span> T_guess = <span class="num">0.0</span>;
+    <span class="kw">double</span> dT_dx = <span class="num">0.0</span>;
+
+    <span class="kw">int</span> iterations = <span class="num">0</span>;
+    <span class="kw">const int</span> max_iterations = <span class="num">100</span>;
+    <span class="kw">const double</span> accuracy_tolerance = <span class="num">1e-6</span>;
+
+    <span class="kw">while</span> (iterations &lt; max_iterations)
+    {
+        <span class="kw">double</span> E = x*x - <span class="num">1.0</span>; 
+        
+        <span class="cmt">// for handling parabolic orbits where E=0.0</span>
+        <span class="kw">if</span> (<span class="func">abs</span>(E) &lt; <span class="num">1e-7</span>) E = (E&lt;<span class="num">0</span>) ? <span class="num">-1e-7</span> : <span class="num">1e-7</span>;
+        
+        <span class="cmt">// I will document more steps when I understand more of why they are exactly being done.</span>
+        <span class="cmt">// For now I am purely taking stepwise reference from Lancaster & Blanchards paper.</span>
+        <span class="kw">double</span> y = <span class="func">sqrt</span>(<span class="func">abs</span>(E));
+
+        <span class="cmt">//protect z from floating point underflow</span>
+        <span class="kw">double</span> z_inner = <span class="num">1.0</span> + q*q*E;
+        z_inner = std::<span class="func">max</span>(<span class="num">0.0</span>, z_inner);
+        <span class="kw">double</span> z = <span class="func">sqrt</span>(z_inner);
+
+        <span class="kw">double</span> f = y*(z-q*x);
+        <span class="kw">double</span> g = x*z-q*E;
+
+        <span class="kw">double</span> d = <span class="num">0.0</span>;
+        <span class="kw">if</span> (E&lt;<span class="num">0.0</span>) {
+            d = std::<span class="func">atan2</span>(f, g);
+        }
+        <span class="kw">else</span> {
+            <span class="kw">double</span> arg = f+g;
+            <span class="kw">if</span> (arg &lt;= <span class="num">0.0</span>) arg = <span class="num">1e-7</span>;
+            d = std::<span class="func">log</span>(arg);
+        }
+
+        T_guess = <span class="num">2.0</span> * (x-q*z-d/y)/E;
+
+        <span class="kw">if</span> (<span class="func">abs</span>(T_guess-T_target) &lt; accuracy_tolerance)
+            <span class="kw">break</span>;
+        
+        dT_dx = (<span class="num">4.0</span> - <span class="num">4</span>*q*q*x/z - <span class="num">3.0</span>*x*T_guess) / E;  
+
+        <span class="kw">double</span> step = (T_guess-T_target) / dT_dx;
+        step = std::<span class="func">max</span>(<span class="num">-0.5</span>, std::<span class="func">min</span>(<span class="num">0.5</span>, step));
+        x = x-step;
+
+        iterations++;
+    }
+
+    <span class="cmt">//recalculate E</span>
+    <span class="kw">double</span> E = x*x - <span class="num">1</span>;
+    <span class="kw">if</span> (<span class="func">abs</span>(E) &lt; <span class="num">1e-7</span>) E = (E&lt;<span class="num">0</span>) ? <span class="num">-1e-7</span> : <span class="num">1e-7</span>;
+    <span class="kw">double</span> z = <span class="func">sqrt</span>(std::<span class="func">max</span>(<span class="num">0.0</span>, <span class="num">1.0</span> + q*q*E));
+    <span class="kw">double</span> y = <span class="func">sqrt</span>(<span class="func">abs</span>(E));
+
+    <span class="cmt">// initial radial velocity</span>
+    <span class="kw">double</span> r1_dot = <span class="func">sqrt</span>(<span class="num">2</span>*mu*s) * (q*z*(s-r1) - x*(s-r2)) / (c*r1);
+    <span class="kw">double</span> a = -s/(<span class="num">2.0</span>*E);
+
+    <span class="kw">double</span> p = <span class="num">2.0</span>*r1-(r1*r1)/a-(r1*r1_dot)*(r1*r1_dot)/mu;
+    p = std::<span class="func">max</span>(<span class="num">0.0</span>, p);
+
+    <span class="kw">double</span> u1_theta = <span class="func">sqrt</span>(mu*p)/r1;
+
+    <span class="typ">Vector3</span> r1_unit = ri.<span class="func">normalized</span>();
+    
+    <span class="cmt">// Rotate the position vector 90 degrees counter-clockwise to get the tangential direction</span>
+    <span class="typ">Vector3</span> theta_unit = <span class="typ">Vector3</span>::<span class="func">cross</span>(normal, r1_unit).<span class="func">normalized</span>();
+
+    <span class="cmt">// Combine radial and tangential velocities safely.</span>
+    <span class="cmt">// Skipped over calculating cot and cosec from the paper</span>
+    <span class="typ">Vector3</span> u1 = (r1_unit * r1_dot) + (theta_unit * u1_theta);
+    <span class="kw">return</span> u1;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="mission" class="glass-panel">
+                <div class="snippet-header">
+                    <div class="snippet-title">Finite Difference Jacobian Refinement</div>
+                    <div class="snippet-meta">OrbitForge // MissionPlanner.cpp</div>
+                </div>
+                <div class="code-container">
+<pre><code><span class="cmt">// nudge individual components by delta to find coordinate sensitivity</span>
+<span class="typ">Vector3</span> r_dx = Dynamics::<span class="func">calculate_trajectory</span>(..., v_guess + <span class="typ">Vector3</span>(delta, <span class="num">0</span>, <span class="num">0</span>), ...).<span class="func">back</span>();
+<span class="typ">Vector3</span> r_dy = Dynamics::<span class="func">calculate_trajectory</span>(..., v_guess + <span class="typ">Vector3</span>(<span class="num">0</span>, delta, <span class="num">0</span>), ...).<span class="func">back</span>();
+
+<span class="cmt">// construct Jacobian matrix components</span>
+<span class="kw">double</span> Jxx = (r_dx.x - r_base.x) / delta;
+<span class="kw">double</span> Jyx = (r_dx.y - r_base.y) / delta;
+<span class="kw">double</span> Jxy = (r_dy.x - r_base.x) / delta;
+<span class="kw">double</span> Jyy = (r_dy.y - r_base.y) / delta;
+
+<span class="cmt">// solve for corrections using matrix determinant</span>
+<span class="kw">double</span> det = (Jxx * Jyy) - (Jxy * Jyx);
+<span class="kw">double</span> dvx = (Jyy * error.x - Jxy * error.y) / det;
+<span class="kw">double</span> dvy = (Jxx * error.y - Jyx * error.x) / det;
+
+v_guess.x += dvx;
+v_guess.y += dvy;</code></pre>
+                </div>
+            </section>
+
+            <section id="body" class="glass-panel">
+                <div class="snippet-header">
+                    <div class="snippet-title">Celestial Body State Initialization</div>
+                    <div class="snippet-meta">OrbitForge // CelestialBody.cpp</div>
+                </div>
+                <div class="code-container">
+<pre><code><span class="typ">CelestialBody</span>::<span class="func">CelestialBody</span>(std::<span class="typ">string</span> body_name, <span class="typ">BodyType</span> type, <span class="kw">double</span> body_mass, 
+                             <span class="kw">double</span> body_radius, <span class="kw">char</span> body_shape, <span class="typ">Vector3</span> init_pos, 
+                             <span class="typ">Vector3</span> init_vel, <span class="kw">bool</span> draw_body, <span class="kw">bool</span> is_kinem) {
+    name = body_name;
+    body_type = type;
+    mass = body_mass;
+    radius = body_radius;
+    shape = body_shape;
+    r = init_pos;
+    v = init_vel;
+    force = Vector3::zero;
+    draw = draw_body;
+    is_kinematic = is_kinem;
+    first_tick_complete = <span class="kw">false</span>;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="encke" class="glass-panel">
+                <div class="snippet-header">
+                    <div class="snippet-title">Encke's Method for N-Body Perturbations</div>
+                    <div class="snippet-meta">OrbitForge // EnckeMethod.cpp</div>
+                </div>
+                <div class="code-container">
+<pre><code><span class="cmt">// Calculate deviation from osculating orbit via Encke's formulation</span>
+<span class="typ">Vector3</span> <span class="func">CalculatePerturbation</span>(<span class="kw">const</span> <span class="typ">CelestialBody</span>& body, <span class="kw">const</span> <span class="typ">State</span>& osculating) {
+    <span class="typ">Vector3</span> accel_pert = Vector3::zero;
+    
+    <span class="cmt">// N-body gravitational perturbations</span>
+    <span class="kw">for</span> (<span class="kw">const</span> <span class="kw">auto</span>& other : system_bodies) {
+        <span class="kw">if</span> (other.id == body.id || other.id == primary.id) <span class="kw">continue</span>;
+        
+        <span class="typ">Vector3</span> r_other = other.position - primary.position;
+        <span class="typ">Vector3</span> r_rel = body.position - other.position;
+
+        <span class="cmt">// q-formulation to minimize subtractive cancellation errors</span>
+        <span class="kw">double</span> q = <span class="func">dot_product</span>(osculating.pos, osculating.pos - <span class="num">2.0</span> * body.position) / <span class="func">pow</span>(body.position.<span class="func">magnitude</span>(), <span class="num">2</span>);
+        <span class="kw">double</span> f_q = q * (<span class="num">3.0</span> + <span class="num">3.0</span>*q + q*q) / (<span class="num">1.0</span> + <span class="func">pow</span>(<span class="num">1.0</span> - q, <span class="num">1.5</span>));
+        
+        <span class="kw">double</span> term1 = <span class="num">1.0</span> / <span class="func">pow</span>(r_other.<span class="func">magnitude</span>(), <span class="num">3</span>);
+        <span class="kw">double</span> term2 = <span class="num">1.0</span> / <span class="func">pow</span>(r_rel.<span class="func">magnitude</span>(), <span class="num">3</span>);
+        
+        accel_pert += G * other.mass * (r_other * term1 - r_rel * term2);
+    }
+    
+    <span class="cmt">// J2 Oblateness harmonic</span>
+    accel_pert += <span class="func">CalculateJ2Effect</span>(body.position);
+    <span class="kw">return</span> accel_pert;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="visualizer" class="glass-panel">
+                <div class="snippet-header">
+                    <div class="snippet-title">Multiprocessed Telemetry Rendering Pipeline</div>
+                    <div class="snippet-meta">OrbitForge // TelemetryVisualizer.py</div>
+                </div>
+                <div class="code-container">
+<pre><code><span class="kw">import</span> multiprocessing <span class="kw">as</span> mp
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="kw">def</span> <span class="func">render_frame</span>(frame_idx, telemetry_chunk, output_dir):
+    fig = plt.<span class="func">figure</span>(figsize=(<span class="num">10</span>, <span class="num">10</span>), facecolor=<span class="str">'black'</span>)
+    ax = fig.<span class="func">add_subplot</span>(<span class="num">111</span>, projection=<span class="str">'3d'</span>)
+    ax.<span class="func">set_facecolor</span>(<span class="str">'black'</span>)
+    
+    <span class="cmt"># Plot planetary trails and current positions</span>
+    <span class="kw">for</span> body <span class="kw">in</span> telemetry_chunk.columns.<span class="func">levels</span>[<span class="num">0</span>]:
+        x = telemetry_chunk[body][<span class="str">'x'</span>][:frame_idx]
+        y = telemetry_chunk[body][<span class="str">'y'</span>][:frame_idx]
+        z = telemetry_chunk[body][<span class="str">'z'</span>][:frame_idx]
+        ax.<span class="func">plot</span>(x, y, z, label=body, alpha=<span class="num">0.7</span>)
+        ax.<span class="func">scatter</span>(x.<span class="func">iloc</span>[<span class="num">-1</span>], y.<span class="func">iloc</span>[<span class="num">-1</span>], z.<span class="func">iloc</span>[<span class="num">-1</span>], s=<span class="num">50</span>)
+        
+    ax.<span class="func">axis</span>(<span class="str">'off'</span>)
+    plt.<span class="func">savefig</span>(<span class="str">f"{output_dir}/frame_{frame_idx:04d}.png"</span>, dpi=<span class="num">200</span>)
+    plt.<span class="func">close</span>(fig)
+
+<span class="kw">def</span> <span class="func">spawn_render_pool</span>(telemetry_file, cores=<span class="kw">None</span>):
+    <span class="cmt"># Load C++ backend integration output</span>
+    df = pd.<span class="func">read_csv</span>(telemetry_file, header=[<span class="num">0</span>,<span class="num">1</span>])
+    cores = cores <span class="kw">or</span> mp.<span class="func">cpu_count</span>() - <span class="num">1</span>
+    
+    <span class="cmt"># Distribute matplotlib rendering across available CPU cores</span>
+    <span class="kw">with</span> mp.<span class="func">Pool</span>(cores) <span class="kw">as</span> pool:
+        tasks = [(i, df, <span class="str">"renders/"</span>) <span class="kw">for</span> i <span class="kw">in</span> <span class="func">range</span>(<span class="func">len</span>(df))]
+        pool.<span class="func">starmap</span>(render_frame, tasks)</code></pre>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- DUST PARTICLES LOGIC ---
+        const canvas = document.getElementById('dust-particles');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.4 - 0.2; 
+                this.speedY = Math.random() * 0.4 - 0.25; 
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(180, 240, 255, ${this.opacity})`; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 10000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('entering');
+            setTimeout(() => document.body.classList.remove('entering'), 600);
+            
+            // Handle page transitions
+            const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
+            transitionLinks.forEach(link => {
+                if(link.getAttribute('href').startsWith('#')) return; 
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetURL = e.currentTarget.href;
+                    document.body.classList.add('exiting');
+                    setTimeout(() => { window.location.href = targetURL; }, 600);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

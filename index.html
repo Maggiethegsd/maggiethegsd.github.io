@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aryamaan Borgohain | Math Major</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;600;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --accent-primary: #00e5ff;
+            --accent-secondary: #7000ff;
+            --gradient-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-light: rgba(0, 229, 255, 0.15);
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            color: var(--text-main); font-family: var(--font-sans);
+            line-height: 1.6; overflow-x: hidden; background-color: #020202;
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #05080f; border-left: 1px solid var(--border-light); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.6); }
+
+        /* --- BACKGROUND & OVERLAYS --- */
+        .bg-blur {
+            position: fixed;
+            top: -5%; left: -5%; width: 110vw; height: 110vh;
+            background-image: url('assets/poster landscape.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(16px) brightness(0.25);
+            z-index: -4;
+            pointer-events: none;
+        }
+
+        #dust-particles {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -3; pointer-events: none;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: -50%; left: -50%; width: 200vw; height: 200vh;
+            background-color: transparent;
+            background-image:
+                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -3;
+            animation: gridPan 40s linear infinite;
+            pointer-events: none;
+        }
+        
+        .grid-vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, transparent 10%, #020202 95%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        @keyframes gridPan {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .page-transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #020202; z-index: 9999; pointer-events: none;
+            transform: scaleY(0); transform-origin: top;
+        }
+        body.entering .page-transition-overlay { animation: wipeDown 0.6s forwards; }
+        body.exiting .page-transition-overlay { animation: wipeUp 0.6s forwards; }
+        @keyframes wipeDown { 0% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+        @keyframes wipeUp { 0% { transform: scaleY(0); transform-origin: top; } 100% { transform: scaleY(1); transform-origin: top; } }
+
+        /* --- LAYOUT & SIDE NAV --- */
+        .layout-wrapper { display: flex; min-height: 100vh; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .container { flex: 1; padding: 2rem; margin-left: 280px; max-width: 1050px; }
+
+        .side-nav {
+            position: fixed; top: 0; bottom: 0; left: 0; width: 280px;
+            display: flex; flex-direction: column; gap: 1.25rem; padding: 4rem 2rem;
+            background: rgba(5, 8, 15, 0.7); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-right: 1px solid var(--border-light); z-index: 100;
+        }
+        
+        .nav-brand { display: flex; align-items: center; font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; margin-bottom: 2rem; letter-spacing: -0.5px; }
+        .status-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--accent-primary); border-radius: 50%; margin-left: 10px; box-shadow: 0 0 10px var(--accent-primary); animation: statusPulse 2s infinite; }
+        @keyframes statusPulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+
+        .nav-link { position: relative; display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-sans); font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 0; }
+        .nav-link svg { width: 18px; height: 18px; stroke-width: 2px; transition: color 0.3s ease; }
+        .nav-link::before { content: '>'; position: absolute; left: -15px; color: var(--accent-primary); opacity: 0; font-family: var(--font-mono); font-weight: bold; transition: all 0.3s ease; }
+        .nav-link:hover { color: var(--text-main); transform: translateX(12px); text-shadow: 0 0 8px rgba(255,255,255,0.2); }
+        .nav-link:hover svg { color: var(--accent-primary); }
+        .nav-link:hover::before { opacity: 1; }
+        
+        .nav-link.code-link {
+            margin-top: auto; color: var(--text-main); font-family: var(--font-mono);
+            font-size: 0.9rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;
+        }
+        .nav-link.code-link:hover { color: var(--accent-secondary); text-shadow: 0 0 8px rgba(112, 0, 255, 0.6); }
+        .nav-link.code-link::before { display: none; }
+
+        /* --- TYPOGRAPHY & PANELS --- */
+        h1 { font-family: var(--font-mono); font-size: 3.5rem; letter-spacing: -1.5px; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.8); line-height: 1.1; display: inline-block; }
+        .blinking-cursor { color: var(--accent-primary); animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        h2.section-title { font-family: var(--font-mono); font-size: 1.5rem; color: var(--text-main); border-bottom: 1px solid var(--border-light); padding-bottom: 0.75rem; margin: 4rem 0 2rem 0; display: inline-flex; align-items: center; gap: 0.75rem; }
+        h2.section-title::before { content: '// '; color: var(--accent-primary); opacity: 0.7; }
+        
+        .glass-panel {
+            background: rgba(5, 8, 15, 0.6); backdrop-filter: blur(16px);
+            border: 1px solid var(--border-light); border-radius: 8px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0,229,255,0.02); padding: 2.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover { 
+            border-color: rgba(0, 229, 255, 0.4); 
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(112, 0, 255, 0.05);
+        }
+
+        .hero-glass { padding: 4rem 3.5rem; background: rgba(5, 8, 15, 0.7); border: 1px solid rgba(0, 229, 255, 0.15); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255,255,255,0.02); transform: translateY(0); }
+        .hero-glass:hover { transform: translateY(-2px); border-color: rgba(112, 0, 255, 0.4); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(112, 0, 255, 0.15), inset 0 0 30px rgba(112, 0, 255, 0.1); }
+
+        .btn { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.03); color: var(--accent-primary); border: 1px solid var(--border-light); padding: 0.75rem 1.5rem; text-decoration: none; font-family: var(--font-mono); font-size: 0.9rem; margin-right: 1rem; margin-top: 2rem; transition: all 0.3s ease; border-radius: 4px; backdrop-filter: blur(4px); }
+        .btn:hover { background: var(--gradient-accent); border-color: transparent; color: #fff; box-shadow: 0 5px 20px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .btn svg { width: 16px; height: 16px; margin-right: 8px; }
+
+        .hero { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero p.subtitle { font-family: var(--font-mono); font-size: 1.25rem; margin-bottom: 2rem; font-weight: 600; letter-spacing: 1px;}
+        .hero p.bio { color: var(--text-main); font-size: 1.1rem; max-width: 750px; line-height: 1.8; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+        /* --- TAGS & BADGES --- */
+        .badge-new {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            border-radius: 4px;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+            text-shadow: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 4px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+
+        .badge-date {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            padding: 0.15rem 0.5rem;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            border-radius: 4px;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+            text-shadow: none;
+            font-weight: 400;
+            letter-spacing: 0px;
+        }
+
+        /* Grid utilities */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        .grid-adaptive { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .grid-skills { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; }
+
+        .project-title { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; font-family: var(--font-mono); font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .project-title svg { width: 22px; height: 22px; color: var(--text-main); opacity: 0.9; }
+        .project-tech { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary); margin-bottom: 1.5rem; }
+        .project-desc p { font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-muted); }
+        .project-desc ul { font-size: 0.9rem; list-style-type: none; }
+        .project-desc ul li { color: var(--text-muted); margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; }
+        .project-desc ul li::before { content: '>'; color: var(--accent-primary); position: absolute; left: 0; opacity: 0.7; }
+
+        .timeline-item { margin-bottom: 1.5rem; }
+        .timeline-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.25rem; }
+        .timeline-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.1rem; }
+        .timeline-title svg { width: 18px; height: 18px; color: var(--accent-primary); }
+        .timeline-date { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary); }
+        .timeline-subtitle { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        
+        /* Horizontal Course Grid */
+        .course-tree-horizontal { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .course-node { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-light); border-left: 2px solid var(--accent-primary); border-radius: 4px; padding: 1rem; transition: all 0.3s ease;}
+        .course-node:hover { background: rgba(0, 229, 255, 0.05); transform: translateX(3px); }
+        .course-node-title { color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .course-node-topics { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; font-style: italic; }
+
+        .skill-group { margin-bottom: 1.5rem; padding-left: 1rem; border-left: 2px solid rgba(0, 229, 255, 0.2); transition: border-color 0.3s ease; }
+        .skill-group:hover { border-color: var(--accent-secondary); }
+        .skill-main { display: flex; align-items: center; font-family: var(--font-mono); font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600; }
+        .skill-icon { width: 18px; height: 18px; margin-right: 8px; color: var(--accent-primary); opacity: 0.8; }
+        
+        .sub-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .sub-tag { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-light); padding: 0.25rem 0.6rem; font-family: var(--font-mono); font-size: 0.75rem; border-radius: 4px; color: var(--text-muted); transition: all 0.3s ease; }
+        .sub-tag:hover { border-color: var(--accent-secondary); color: #fff; background: rgba(112, 0, 255, 0.1); }
+
+        .project-media { width: 100%; border-radius: 6px; border: 1px solid var(--border-light); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        
+        .poster-container { position: relative; display: inline-block; max-width: 80%; margin-bottom: 1rem; }
+        .poster-container img { display: block; width: 100%; border-radius: 6px; border: 1px solid var(--border-light); box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+        .poster-grid-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(0, 229, 255, 0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.25) 1px, transparent 1px);
+            background-size: 40px 40px; background-position: center center; border-radius: 6px; pointer-events: none; z-index: 5;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8); mix-blend-mode: overlay;
+        }
+
+        .visual-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem; }
+        .gallery-img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-light); transition: transform 0.3s ease, border-color 0.3s ease; opacity: 0.9; }
+        .gallery-img:hover { transform: scale(1.02); border-color: var(--accent-secondary); opacity: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 2; position: relative;}
+
+        /* Enhanced Video Carousel */
+        .video-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-bottom: 1.5rem;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) rgba(0,0,0,0.3);
+        }
+        .video-carousel::-webkit-scrollbar { height: 8px; }
+        .video-carousel::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+        .video-carousel::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+        
+        .video-carousel video {
+            flex: 0 0 100%;
+            max-height: 360px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            scroll-snap-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            transition: border-color 0.3s ease;
+        }
+        .video-carousel video:hover { border-color: var(--accent-secondary); }
+
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-light); padding: 1rem 2.5rem; color: var(--text-main); text-decoration: none; font-family: var(--font-mono); font-size: 1rem; border-radius: 6px; transition: all 0.3s ease; flex: 1; min-width: 200px; }
+        .social-btn:hover { background: var(--gradient-accent); border-color: transparent; color: #fff; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(112,0,255,0.3); }
+        .social-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+        footer { margin-top: 6rem; padding: 2rem 0; border-top: 1px solid var(--border-light); text-align: center; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+
+        /* --- HERO PROFILE PHOTO --- */
+        .hero-inner-flex { display: flex; gap: 3rem; align-items: center; justify-content: space-between; flex-wrap: wrap-reverse; }
+        .profile-photo { width: 220px; height: 220px; border-radius: 16px; border: 2px solid var(--border-light); box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,229,255,0.1); object-fit: cover; transition: transform 0.3s ease; }
+        .profile-photo:hover { transform: scale(1.02) rotate(1deg); }
+        
+        /* --- DYNAMIC STACKED RESEARCH PAPER --- */
+        #research .glass-panel { display: flex; align-items: center; gap: 4rem; justify-content: center; }
+        .research-details { flex: 1; position: relative; max-width: 500px; }
+        
+        .paper-stack { position: relative; width: 220px; height: 284px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; text-decoration: none; display: block; flex-shrink: 0; }
+        .paper-stack:hover { transform: translateY(-15px) scale(1.05); z-index: 10;}
+        
+        .paper-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #ccc; object-fit: cover; object-position: top; transition: all 0.4s ease; }
+        .paper-stack .page-3 { transform: translate(12px, 12px) rotate(5deg); opacity: 0.3; z-index: 1; }
+        .paper-stack .page-2 { transform: translate(6px, 6px) rotate(2.5deg); opacity: 0.6; z-index: 2; }
+        .paper-stack .page-1 { transform: translate(0, 0) rotate(0deg); opacity: 0.8; z-index: 3; }
+
+        .paper-stack:hover .page-3 { transform: translate(24px, 18px) rotate(8deg); opacity: 0.7; }
+        .paper-stack:hover .page-2 { transform: translate(12px, 9px) rotate(4deg); opacity: 0.9; }
+        .paper-stack:hover .page-1 { opacity: 1; box-shadow: 0 15px 30px rgba(0, 229, 255, 0.2); border-color: var(--accent-primary); }
+        
+        .paper-fade-overlay { position: absolute; bottom: 0; left: -10px; width: calc(100% + 40px); height: 60%; background: linear-gradient(to bottom, transparent, rgba(9, 13, 23, 1) 90%); z-index: 4; transition: opacity 0.4s ease; pointer-events: none; }
+        .paper-stack:hover .paper-fade-overlay { opacity: 0; }
+
+        .dynamic-arrow { position: absolute; left: -100px; top: 50%; transform: translateY(-50%); width: 80px; height: 24px; pointer-events: none; }
+        .dynamic-arrow path { fill: none; stroke: var(--accent-primary); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        
+        /* --- CONDENSED PROJECTS --- */
+        #projects .glass-panel { display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; }
+        #projects .glass-panel .project-media, #projects .glass-panel .visual-gallery video, #projects .glass-panel .visual-gallery img { max-height: 250px; object-fit: contain; }
+        #projects .poster-container { max-width: 100%; margin-top: 1rem; margin-bottom: 0; text-align: left; }
+        #projects .project-desc ul { margin-left: 0; }
+        #projects .project-desc strong { color: #fff; font-weight: 600; }
+        
+        .project-grid-media { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); }
+        .project-grid-media .project-media { flex: 1; min-width: 150px; max-height: 200px !important; }
+
+        .visual-gallery-stacked { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); }
+        .visual-gallery-stacked video { max-height: 180px !important; }
+
+        @media (max-width: 1024px) {
+            .layout-wrapper { flex-direction: column; }
+            .side-nav { position: relative; top: 0; bottom: auto; left: 0; width: 100%; height: auto; padding: 1.5rem; flex-direction: row; flex-wrap: wrap; justify-content: center; border-right: none; border-bottom: 1px solid var(--border-light); background: rgba(5, 8, 15, 0.9); }
+            .nav-brand { width: 100%; text-align: center; margin-bottom: 1rem; justify-content: center; }
+            .nav-link::before { display: none; }
+            .nav-link:hover { transform: translateY(-2px); }
+            .nav-link.code-link { margin-top: 0; border-top: none; padding-top: 0.5rem; border-left: 1px solid var(--border-light); padding-left: 1rem; }
+            .container { margin-left: auto; margin-right: auto; padding: 2rem 1.5rem; }
+            .hero-glass { padding: 2rem 1.5rem; }
+            h1 { font-size: 2.5rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 2rem; }
+            .grid-skills { grid-template-columns: 1fr; }
+            .poster-container { max-width: 100%; }
+            
+            .hero-inner-flex { justify-content: center; text-align: center; gap: 2rem; }
+            .profile-photo { width: 180px; height: 180px; }
+            
+            #research .glass-panel { flex-direction: column-reverse; gap: 2.5rem; text-align: center; }
+            .dynamic-arrow { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-transition-overlay"></div>
+    <div class="bg-blur"></div>
+    <canvas id="dust-particles"></canvas>
+    <div class="grid-bg"></div>
+    <div class="grid-vignette"></div>
+
+    <div class="layout-wrapper">
+        
+        <nav class="side-nav">
+            <div class="nav-brand gradient-text">MAGGIETHEGSD<span class="status-dot"></span></div>
+            
+            <a href="#home" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Home
+            </a>
+            <a href="#education" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                Education
+            </a>
+            <a href="#projects" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Engineering
+            </a>
+            <a href="#research" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
+                Research
+            </a>
+            <a href="#art" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                3D & Art
+            </a>
+            <a href="#skills" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                Expertise
+            </a>
+            <a href="#contact" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                Contact
+            </a>
+            
+            <a href="code.html" class="nav-link code-link transition-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                The Code Lab &rarr;
+            </a>
+        </nav>
+
+        <main class="container">
+            
+            <header class="hero" id="home">
+                <div class="glass-panel hero-glass hero-inner-flex">
+                    <div style="flex: 1; min-width: 600px;">
+                        <h1>Aryamaan Borgohain<span class="blinking-cursor">_</span></h1>
+                        <p class="subtitle gradient-text">Math Major</p>
+                        <p class="bio">
+                            Hey, I am Aryamaan - an Undergrad Math major, interested in Scientific Computing, Computer graphics, Numerical 
+                            methods, Orbital mechanics and more.<br><br>
+                            I started out with finding this stuff interesting and self-learning through YouTube videos and tinkering with software, making 3D assets, software, and game 
+                            mechanics using Unity, C# and Blender among various other creative tools. Today my focus has transitioned to translating 
+                            analytical models into dynamic systems - specifically within the domains of Celestial 
+                            mechanics, Linear algebra, and Graphics programming.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap;">
+                            <a href="assets/CV_Aryamaan.pdf" target="_blank" class="btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                Look at my CV
+                            </a>
+                            <a href="#projects" class="btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                                View Projects
+                            </a>
+                            <a href="#contact" class="btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                Get in Touch
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="assets/profile_photo.jpg" alt="Aryamaan Borgohain" class="profile-photo">
+                    </div>
+                </div>
+            </header>
+
+            <section id="education">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px; color: var(--text-main); opacity: 0.9;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    Education
+                </h2>
+                <div class="glass-panel adapative">
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-title">
+                                <img src="assets/uni_logo.png" alt="Tezpur University Logo" style="width: 44px; height: 44px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4)); border-radius: 50%;">
+                                Tezpur University
+                            </div>
+                            <div class="timeline-date">2025 — 2030 (Expected)</div>
+                        </div>
+                        <div class="timeline-subtitle">Integrated MSc. in Mathematics</div>
+                        
+                        <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-primary); margin-top: 1.5rem; font-weight: 600;">[+] Notable Courses Taken</div>
+                        <div class="course-tree-horizontal">
+                            <div class="course-node">
+                                <div class="course-node-title">MSIN101: Mathematics I</div>
+                                <div class="course-node-topics">Introductory Real Analysis, Calculus II, Ordinary Differential Equations</div>
+                            </div>
+                            <div class="course-node">
+                                <div class="course-node-title">MSIN102: Mathematics II</div>
+                                <div class="course-node-topics">Calculus III, Introductory Linear Algebra</div>
+                            </div>
+                            <div class="course-node">
+                                <div class="course-node-title">SEEC1005: Statistics & Data</div>
+                                <div class="course-node-topics">Advanced Excel, ANOVA, JAMOVI, Statistical Tests (Mann Whitney, Wilcoxon Signed Rank, t-test, ...)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" style="margin-bottom: 0; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+                        <div class="timeline-header">
+                            <div class="timeline-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                Shrimanta Shankar Academy, Guwahati
+                            </div>
+                            <div class="timeline-date">2012 — 2025</div>
+                        </div>
+                        <div class="timeline-subtitle">AISSCE & AISSE</div>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">
+                            Completed secondary and senior secondary school.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="projects">
+                <h2 class="section-title">Some of my major projects</h2>
+                
+                <div class="grid-2">
+                    <div class="glass-panel">
+                        <h3 class="project-title gradient-text">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                            OrbitForge: Celestial Mechanics Engine
+                            <span class="badge-new">NEW!</span>
+                        </h3>
+                        <div class="project-tech">C++ | Python | OpenCV | Lamberts BVP | <br>Verlet Integration | Encke's Method </div>
+                        
+                        <div style="text-align: left;">
+                            <div class="poster-container">
+                                <img src="assets/poster landscape.png" alt="OrbitForge Poster">
+                                <div class="poster-grid-overlay"></div>
+                            </div>
+                        </div>
+
+                        <div class="project-desc">
+                            <p>A high-accuracy celestial mechanics and orbital math suite engineered to solve orbital boundary value problems (BVP) using the <strong>Lancaster and Blanchard method (NASA 1969)</strong>.</p>
+                            <ul>
+                                <li><strong>Physics Backend:</strong> Universal Variables and Newton-Raphson iteration on a dynamically calculated Jacobian matrix.</li>
+                                <li><strong>Numerical Stability:</strong> Encke's Method for N-body perturbations and Symplectic Velocity-Verlet integration.</li>
+                                <li><strong>Parallelized Pipeline:</strong> Memory-optimized C++ core feeding into a CSV for a multiprocessed Python pipeline visualisation.</li>
+                            </ul>
+                        </div>
+
+                        <div class="project-grid-media">
+                            <p style="font-family: var(--font-mono); color: var(--accent-primary); font-size: 0.8rem; width: 100%; margin-bottom: 0.5rem;">// SIMULATION TELEMETRY DATA</p>
+                            <img src="assets/mercury-final.gif" alt="Mercury Flyby Simulation" class="project-media">
+                            <img src="assets/mars-final.gif" alt="Mars Trajectory Simulation" class="project-media">
+                            <img src="assets/jupiter-final.gif" alt="Jupiter Trajectory Simulation" class="project-media">
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <h3 class="project-title gradient-text">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                            Computational Math Visualization Suite
+                        </h3>
+                        <div class="project-tech">Python | NumPy | SciPy | Multiprocessing | Matplotlib</div>
+                        <div class="project-desc">
+                            <p>A collection of tools built to visualize essential math concepts, especially ones I encountered in my first year that couldn't be just rote-memorised without questioning what they truly look like on a computer!</p>
+                            <ul>
+                                <li><strong>Surface Rendering:</strong> Z-order chunk rendering algorithm using manually calculated surface normals for accurate depth buffering.</li>
+                                <li><strong>Performance:</strong> Python multiprocessing pipeline achieving a 10x speedup in frame sequence rendering.</li>
+                                <li><strong>Algorithm Verification:</strong> Included an empirical $O(N^3)$ verification of Gaussian Elimination operation cost via least-squares polynomial curve fitting.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="visual-gallery-stacked">
+                            <p style="font-family: var(--font-mono); color: var(--accent-primary); font-size: 0.8rem; width: 100%; margin-bottom: 0.5rem;">// SURFACE NORMALS VISUALIZATION</p>
+                            <video autoplay loop muted playsinline class="project-media">
+                                <source src="assets/normals_abs_power.mp4" type="video/mp4">
+                            </video>
+                            <video autoplay loop muted playsinline class="project-media">
+                                <source src="assets/normal_iterative_sin.mp4" type="video/mp4">
+                            </video>
+                            <video autoplay loop muted playsinline class="project-media">
+                                <source src="assets/Iterative_sin.mp4" type="video/mp4">
+                            </video>
+                            <video autoplay loop muted playsinline class="project-media">
+                                <source src="assets/normals_sin_sqrt.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="research">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px; color: var(--text-main); opacity: 0.9;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
+                    Check out my research!
+                </h2>
+                <div class="glass-panel">
+                    
+                    <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="paper-stack">
+                        <img src="assets/ivp3.png" class="paper-page page-3" alt="Paper Page 3">
+                        <img src="assets/ivp2.png" class="paper-page page-2" alt="Paper Page 2">
+                        <img src="assets/ivp1.png" class="paper-page page-1" alt="Paper Page 1">
+                        <div class="paper-fade-overlay"></div>
+                    </a>
+
+                    <div class="research-details">
+                        <svg class="dynamic-arrow" viewBox="0 0 80 24">
+                            <path d="M5 12h65M60 5l10 7-10 7">
+                                <animate attributeName="transform" from="translate(0,0)" to="translate(10,0)" dur="1.2s" repeatCount="indefinite" additive="sum"/>
+                                <animate attributeName="opacity" from="1" to="0.5" dur="1.2s" repeatCount="indefinite"/>
+                            </path>
+                        </svg>
+                        
+                        <h3 style="font-family: var(--font-sans); color: #fff; font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; flex-wrap: wrap;">
+                            Computational Estimation of Initial Value Problems
+                            <span class="badge-date">December 2025</span>
+                        </h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.25rem;">An elementary unpublished literature review compiling some Computational estimation techniques for Initial Value Problems. Served as LaTeX learning project. </p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Integrates various numerical methods and visualisations from RK1 to Phase Lines, Slope Fields, Taylor Series and Picard's Method.</p>
+                        
+                        <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="btn" style="margin-top: 0; padding: 0.6rem 1.2rem;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            [PDF] Read full paper
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="art">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px; color: var(--text-main); opacity: 0.9;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    3D Environments & Technical Art
+                </h2>
+                
+                <div class="glass-panel adaptive" style="margin-bottom: 2rem;">
+                    <h3 class="project-title gradient-text">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        Stonehill Road Bungalow
+                    </h3>
+                    <div class="project-tech">Unity (URP) | Blender | Level Design | Lighting & Volumetrics | DaVinci Resolve </div>
+                    <div class="project-desc">
+                        <p>An atmospheric environment of a house situated in the forest areas, with an abandoned church to its backside. Served as a map for an in-progress game at that time, tentatively titled Profane Locus. <br>I have plans to return to it in the future with good skills, and lots of built discipline!</p>
+                    </div>
+
+                    <p style="font-family: var(--font-mono); color: var(--accent-primary); font-size: 0.8rem; margin-top: 1.5rem; margin-bottom: 0;">// CINEMATIC SHOWCASE (SCROLL HORIZONTALLY)</p>
+                    <div class="video-carousel">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/stonehill_vid1.mp4" type="video/mp4">
+                        </video>
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/stonehill_vid2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+
+                    <p style="font-family: var(--font-mono); color: var(--accent-primary); font-size: 0.8rem; margin-top: 1.5rem; margin-bottom: 0;">// ENVIRONMENT STILLS</p>
+                    <div class="visual-gallery" style="margin-top: 1rem; border-top: none; padding-top: 0;">
+                        <img src="assets/1.jpg" alt="Stonehill Exterior 1" class="gallery-img" loading="lazy">
+                        <img src="assets/2.jpg" alt="Stonehill Exterior 2" class="gallery-img" loading="lazy">
+                        <img src="assets/3.jpg" alt="Stonehill Forest" class="gallery-img" loading="lazy">
+                        <img src="assets/4.jpg" alt="Stonehill Church Interior" class="gallery-img" loading="lazy">
+                        <img src="assets/5.jpg" alt="Stonehill Graveyard 1" class="gallery-img" loading="lazy">
+                        <img src="assets/6.jpg" alt="Stonehill Graveyard 2" class="gallery-img" loading="lazy">
+                        <img src="assets/7.jpg" alt="Stonehill Porch" class="gallery-img" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="glass-panel adaptive">
+                    <h3 class="project-title gradient-text">
+                        Architectural Visualization & Prop Modeling
+                    </h3>
+                    <div class="project-tech">Blender | Unity (URP) | DaVinci Resolve | Adobe Photoshop </div>
+                    <div class="project-desc">
+                        <p>Environments and props focusing on procedural texturing, physically based rendering (PBR), and custom graphics pipeline shaders.</p>
+                        <ul>
+                            <li><strong>Graphics Logic:</strong> Optimized Shader Graphs and C# scripts to simulate volumetric lighting effects in real-time.</li>
+                            <li><strong>Topology:</strong> Focused on clean topology + optimized hard-surface modeling for game engines and clean UV mapping.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visual-gallery">
+                        <img src="assets/bedroom.jpg" alt="Bedroom Render 1" class="gallery-img" loading="lazy">
+                        <img src="assets/bedroom 2.jpg" alt="Bedroom Render 2" class="gallery-img" loading="lazy">
+                        <img src="assets/lounge.jpg" alt="Lounge Render" class="gallery-img" loading="lazy">
+                        <video autoplay loop muted playsinline class="gallery-img"><source src="assets/lounge 3d.mp4" type="video/mp4"></video>
+                        <img src="assets/ouija.jpg" alt="Ouija Board Prop" class="gallery-img" loading="lazy">
+                        <img src="assets/trench.jpg" alt="Trench Environment" class="gallery-img" loading="lazy">
+                        <video autoplay loop muted playsinline class="gallery-img"><source src="assets/tommy.mp4" type="video/mp4"></video>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                        <a href="https://www.artstation.com/maggiethegsd" target="_blank" class="btn" style="margin: 0;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            View even more on my ArtStation...
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="grid-skills">
+                <section id="skills">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px; color: var(--text-main); opacity: 0.9;"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                        Technical Expertise
+                    </h2>
+                    <div class="glass-panel" style="height: 100%;">
+                        
+                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem;">[01] SYSTEMS & COMPUTING</h3>
+                        
+                        <div class="skill-group">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                                C++
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">Memory Management</span>
+                                <span class="sub-tag">Physics Backend</span>
+                                <span class="sub-tag">File Streams & I/O</span>
+                                <span class="sub-tag">Pointer Arithmetic</span>
+                            </div>
+                        </div>
+
+                        <div class="skill-group">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                                Python
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">NumPy</span>
+                                <span class="sub-tag">SciPy & SymPy</span>
+                                <span class="sub-tag">Matplotlib</span>
+                                <span class="sub-tag">OpenCV</span>
+                                <span class="sub-tag">Multiprocessing</span>
+                            </div>
+                        </div>
+
+                        <div class="skill-group" style="margin-bottom: 2rem;">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                                C# & Database
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">Game State Architecture</span>
+                                <span class="sub-tag">SQL & Relational Logic</span>
+                                <span class="sub-tag">Tkinter (GUI)</span>
+                            </div>
+                        </div>
+
+                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem;">[02] GRAPHICS & ENGINES</h3>
+
+                        <div class="skill-group">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                Unity Engine
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">Universal Render Pipeline (URP)</span>
+                                <span class="sub-tag">Shader Graphs</span>
+                                <span class="sub-tag">Lighting & Volumetrics</span>
+                                <span class="sub-tag">ProBuilder</span>
+                            </div>
+                        </div>
+
+                        <div class="skill-group" style="margin-bottom: 2rem;">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                                Technical Art & Post
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">Blender 3D</span>
+                                <span class="sub-tag">Hard-Surface Modeling</span>
+                                <span class="sub-tag">Procedural Texturing</span>
+                                <span class="sub-tag">DaVinci Resolve</span>
+                            </div>
+                        </div>
+
+                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem;">[03] MATHEMATICAL DOMAINS</h3>
+
+                        <div class="skill-group" style="margin-bottom: 0;">
+                            <div class="skill-main">
+                                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                Applied Mathematics
+                            </div>
+                            <div class="sub-tags">
+                                <span class="sub-tag">Celestial Mechanics</span>
+                                <span class="sub-tag">Linear Algebra</span>
+                                <span class="sub-tag">Real Analysis</span>
+                                <span class="sub-tag">Runge-Kutta Methods</span>
+                                <span class="sub-tag">Boundary Value Problems</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section id="certifications">
+                    <h2 class="section-title">Certifications</h2>
+                    <div class="glass-panel" style="height: 100%;">
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <div class="timeline-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                    Introduction to Scientific Computing with Python
+                                </div>
+                                <div class="timeline-date">Certified</div>
+                            </div>
+                            <div class="timeline-subtitle">University of Colorado Boulder (Coursera)</div>
+                            <a href="https://www.coursera.org/account/accomplishments/verify/MJ0PWZDRGY63" target="_blank" class="btn" style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: rgba(0, 229, 255, 0.4);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                View Certificate
+                            </a>
+                        </div>
+
+                        <div class="timeline-item" style="margin-bottom: 0; margin-top: 2rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+                            <div class="timeline-header">
+                                <div class="timeline-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                    AISSCE 2025 CS Project
+                                </div>
+                                <div class="timeline-date">2024 — 2025</div>
+                            </div>
+                            <div class="timeline-subtitle">Institute Management Software (Python/SQL)</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section id="contact" style="margin-top: 5rem;">
+                <div class="glass-panel adaptive" style="text-align: center; padding: 3rem 2rem;">
+                    <h2 class="timeline-title" style="font-size: 1.8rem; margin-bottom: 0.5rem; font-family: var(--font-sans); font-weight: 600; justify-content: center;">Get in Touch</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 0.95rem;">
+                        I am up anytime for research collaborations, building simulations, games, dynamic systems, and discussions in computational mathematics, graphics architecture, linear algebra, any of my projects, anything really!
+                    </p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; max-width: 800px; margin: 0 auto;">
+                        <a href="https://github.com/Maggiethegsd" target="_blank" class="social-btn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+                        <a href="https://www.linkedin.com/in/aryamaan-borgohain/" target="_blank" class="social-btn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=msi25005@tezu.ac.in" target="_blank" rel="noopener noreferrer" class="social-btn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>Uni Mail</a>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p>Aryamaan Borgohain &copy; 2026. Built with logic and structure.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('dust-particles');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.4 - 0.2; 
+                this.speedY = Math.random() * 0.4 - 0.25; 
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(180, 240, 255, ${this.opacity})`; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 10000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('entering');
+            setTimeout(() => { document.body.classList.remove('entering'); }, 600);
+            const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
+            transitionLinks.forEach(link => {
+                if(link.getAttribute('href').startsWith('#')) return; 
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetURL = e.currentTarget.href;
+                    document.body.classList.add('exiting');
+                    setTimeout(() => { window.location.href = targetURL; }, 600);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
