@@ -138,9 +138,17 @@
         .timeline-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem; }
         .timeline-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.1rem; font-family: var(--font-serif); }
         .timeline-title svg { width: 18px; height: 18px; color: var(--text-main); }
-        .timeline-date { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
         .timeline-subtitle { font-family: var(--font-sans); font-size: 0.95rem; color: var(--text-main); margin-top: 0.5rem; font-style: italic;}
+        .timeline-date { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
         
+        /* Newly Added CSS for logos */
+        .timeline-logo {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
         .course-tree-horizontal { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
         .course-node { background: var(--bg-main); border: 1px solid var(--border-light); padding: 1rem; }
         .course-node-title { color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.25rem;}
@@ -285,6 +293,7 @@
                     <div class="timeline-item">
                         <div class="timeline-header">
                             <div class="timeline-title">
+                                <img src="assets/uni_logo.png" alt="Tezpur University Logo" class="timeline-logo">
                                 Tezpur University
                             </div>
                             <div class="timeline-date">2025 to 2030 (Expected)</div>
@@ -334,6 +343,7 @@
                     <div class="timeline-item" style="margin-bottom: 0;">
                         <div class="timeline-header">
                             <div class="timeline-title">
+                                <img src="assets/ssa_logo.png" alt="Shrimanta Shankar Academy Logo" class="timeline-logo">
                                 Shrimanta Shankar Academy, Guwahati
                             </div>
                             <div class="timeline-date">2012 to 2025</div>
@@ -586,10 +596,12 @@
 			<div class="timeline-item">
                             <div class="timeline-header">
                                 <div class="timeline-title">
+                                    <img src="assets/iitp_logo.png" alt="IIT Patna Logo" class="timeline-logo">
+                                    <img src="assets/mtts_logo.png" alt="MTTS Logo" class="timeline-logo">
                                     Initiation into Mathematics 2026 at Indian Institute of Technology, Patna
                                 </div>
                             </div>
-                            <div class="timeline-subtitle">Mathematics Training & Talent Search (MTTS) Trust</div>
+                            <div class="timeline-subtitle">Mathematics Training & Talent Search (MTTS) Trust, funded by the National Board for Higher Mathematics (NBHM)</div>
                             <a href="assets/mtts initmath cert.pdf" target="_blank" class="btn" style="margin-top: 1rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
                                 View Certificate
                             </a>
@@ -598,6 +610,8 @@
                         <div class="timeline-item">
                             <div class="timeline-header">
                                 <div class="timeline-title">
+                                    <img src="assets/ucboulder_logo.png" alt="University of Colorado Boulder Logo" class="timeline-logo">
+                                    <img src="assets/coursera_logo.png" alt="Coursera Logo" class="timeline-logo">
                                     Introduction to Scientific Computing with Python
                                 </div>
                             </div>
