@@ -1,673 +1,673 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aryamaan Borgohain | Math Major</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aryamaan Borgohain | Math Major</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-        :root {
-            --bg-main: #f9f6ef; 
-            --bg-panel: #ffffff; 
-            --text-main: #1f1d1a; 
-            --text-muted: #66635c; 
-            --accent-primary: #004b87; 
-            --accent-secondary: #8b0000; 
-            --border-light: #e6e1d6; 
-            --border-dark: #1f1d1a;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-sans: 'Inter', sans-serif;
-            --font-serif: 'Lora', serif;
-        }
+            :root {
+                --bg-main: #f9f6ef; 
+                --bg-panel: #ffffff; 
+                --text-main: #1f1d1a; 
+                --text-muted: #66635c; 
+                --accent-primary: #004b87; 
+                --accent-secondary: #8b0000; 
+                --border-light: #e6e1d6; 
+                --border-dark: #1f1d1a;
+                --font-mono: 'JetBrains Mono', monospace;
+                --font-sans: 'Inter', sans-serif;
+                --font-serif: 'Lora', serif;
+            }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        
-        body {
-            color: var(--text-main); 
-            font-family: var(--font-sans);
-            line-height: 1.7; 
-            overflow-x: hidden; 
-            background-color: var(--bg-main);
-            background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: -1px -1px;
-            background-attachment: fixed;
-        }
-
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); border-left: 1px solid var(--border-light); }
-        ::-webkit-scrollbar-thumb { background: #d4cfc5; }
-        ::-webkit-scrollbar-thumb:hover { background: #b5b0a6; }
-
-        .page-transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--bg-main); z-index: 9999; pointer-events: none;
-            opacity: 0; transition: opacity 0.4s ease;
-        }
-        body.entering .page-transition-overlay { animation: fadeOut 0.6s forwards; }
-        body.exiting .page-transition-overlay { animation: fadeIn 0.4s forwards; }
-        @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
-        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-
-        .layout-wrapper { display: flex; min-height: 100vh; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; background: var(--bg-main); box-shadow: 0 0 40px rgba(0,0,0,0.03); }
-        .container { flex: 1; padding: 3rem; margin-left: 280px; max-width: 1050px; background: var(--bg-panel); border-left: 1px solid var(--border-light); border-right: 1px solid var(--border-light); min-height: 100vh; }
-
-        .side-nav {
-            position: fixed; top: 0; bottom: 0; left: 0; width: 280px;
-            display: flex; flex-direction: column; gap: 1rem; padding: 4rem 2rem;
-            background: var(--bg-main); z-index: 100;
-        }
-        
-        .nav-brand { display: flex; align-items: center; font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 2.5rem; letter-spacing: 0.5px; color: var(--text-main); }
-        .status-dot { display: inline-block; width: 6px; height: 6px; background-color: var(--accent-primary); border-radius: 50%; margin-left: 10px; }
-
-        .nav-link { position: relative; display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-sans); font-size: 0.95rem; transition: all 0.2s ease; padding: 0.5rem 0; }
-        .nav-link svg { width: 16px; height: 16px; stroke-width: 1.5px; transition: color 0.2s ease; }
-        .nav-link:hover { color: var(--accent-primary); padding-left: 5px; }
-        
-        .nav-link.code-link {
-            margin-top: auto; color: var(--text-main); font-family: var(--font-mono);
-            font-size: 0.85rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;
-        }
-        .nav-link.code-link:hover { color: var(--accent-secondary); }
-
-        h1 { font-family: var(--font-serif); font-size: 3rem; letter-spacing: -0.5px; margin-bottom: 0.5rem; color: var(--text-main); line-height: 1.2; font-weight: 700; }
-        .blinking-cursor { font-weight: 400; animation: blink 1s step-end infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        h2.section-title { font-family: var(--font-serif); font-size: 1.75rem; color: var(--text-main); border-bottom: 2px solid var(--text-main); padding-bottom: 0.5rem; margin: 4rem 0 2rem 0; display: inline-flex; align-items: center; gap: 0.75rem; width: 100%; }
-        h2.section-title svg { width: 24px; height: 24px; stroke-width: 1.5px; }
-        
-        .glass-panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-light); 
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            transition: border-color 0.2s ease;
-        }
-        .glass-panel:hover { border-color: var(--accent-primary); }
-
-        .hero-glass { padding: 3rem 0; border: none; border-bottom: 1px solid var(--border-light); background: transparent; margin-bottom: 2rem; }
-        .hero-glass:hover { border-color: var(--border-light); }
-
-        .btn { display: inline-flex; align-items: center; background: transparent; color: var(--text-main); border: 1px solid var(--border-dark); padding: 0.6rem 1.2rem; text-decoration: none; font-family: var(--font-sans); font-size: 0.9rem; margin-right: 1rem; margin-top: 1.5rem; transition: all 0.2s ease; }
-        .btn:hover { background: var(--border-dark); color: var(--bg-panel); }
-        .btn svg { width: 16px; height: 16px; margin-right: 8px; }
-
-        .hero { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero p.subtitle { font-family: var(--font-mono); font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-muted); }
-        .hero p.bio { color: var(--text-main); font-size: 1.05rem; max-width: 750px; line-height: 1.8; }
-
-        .badge-new {
-            display: inline-block;
-            background: var(--bg-main);
-            border: 1px solid var(--accent-secondary);
-            color: var(--accent-secondary);
-            padding: 0.15rem 0.5rem;
-            font-size: 0.7rem;
-            font-family: var(--font-mono);
-            margin-left: 0.75rem;
-            vertical-align: middle;
-            font-weight: 600;
-        }
-
-        .badge-date {
-            display: inline-block;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-family: var(--font-mono);
-            margin-left: 0.75rem;
-            vertical-align: middle;
-        }
-
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-        .grid-skills { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; }
-
-        .project-title { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main); }
-        .project-title svg { width: 20px; height: 20px; color: var(--text-main); }
-        .project-tech { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; border-bottom: 1px dotted var(--border-light); padding-bottom: 0.5rem; }
-        .project-desc p { font-size: 0.95rem; margin-bottom: 0.75rem; }
-        .project-desc ul { font-size: 0.95rem; list-style-type: square; padding-left: 1.5rem; margin-bottom: 1rem; }
-        .project-desc ul li { margin-bottom: 0.4rem; color: var(--text-main); }
-        .project-desc strong { font-weight: 600; color: var(--text-main); }
-
-        .timeline-item { margin-bottom: 2rem; }
-        .timeline-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem; }
-        .timeline-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.1rem; font-family: var(--font-serif); }
-        .timeline-title svg { width: 18px; height: 18px; color: var(--text-main); }
-        .timeline-subtitle { font-family: var(--font-sans); font-size: 0.95rem; color: var(--text-main); margin-top: 0.5rem; font-style: italic;}
-        .timeline-date { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
-        
-        /* Newly Added CSS for logos */
-        .timeline-logo {
-            height: 36px;
-            width: auto;
-            object-fit: contain;
-            border-radius: 4px;
-        }
-
-        .course-tree-horizontal { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .course-node { background: var(--bg-main); border: 1px solid var(--border-light); padding: 1rem; }
-        .course-node-title { color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.25rem;}
-        .course-node-topics { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
-
-        .skill-group { margin-bottom: 1.5rem; }
-        .skill-main { display: flex; align-items: center; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600; }
-        .skill-icon { width: 16px; height: 16px; margin-right: 8px; color: var(--text-muted); }
-        
-        .sub-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-        .sub-tag { background: var(--bg-panel); border: 1px solid var(--border-light); padding: 0.2rem 0.5rem; font-family: var(--font-sans); font-size: 0.8rem; color: var(--text-muted); }
-
-        .project-media { width: 100%; border: 1px solid var(--border-light); display: block; margin-bottom: 0.5rem; }
-        
-        .poster-container { margin-bottom: 1rem; }
-        .poster-container img { display: block; width: 100%; border: 1px solid var(--border-light); }
-
-        .visual-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-        .gallery-img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--border-light); }
-
-        .video-carousel {
-            display: flex;
-            overflow-x: auto;
-            gap: 1rem;
-            margin-top: 1rem;
-            padding-bottom: 1rem;
-            scroll-snap-type: x mandatory;
-        }
-        .video-carousel::-webkit-scrollbar { height: 6px; }
-        
-        .video-carousel video {
-            flex: 0 0 100%;
-            max-height: 360px;
-            object-fit: cover;
-            border: 1px solid var(--border-light);
-            scroll-snap-align: center;
-        }
-
-        .social-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; background: transparent; border: 1px solid var(--border-light); padding: 0.8rem 2rem; color: var(--text-main); text-decoration: none; font-family: var(--font-sans); font-size: 0.9rem; transition: all 0.2s ease; flex: 1; min-width: 180px; }
-        .social-btn:hover { background: var(--bg-main); border-color: var(--border-dark); }
-        .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
-
-        footer { margin-top: 5rem; padding: 2rem 0; border-top: 1px solid var(--border-light); text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
-
-        .hero-inner-flex { display: flex; gap: 3rem; align-items: center; justify-content: space-between; flex-wrap: wrap-reverse; }
-        .profile-photo { width: 200px; height: 200px; border: 1px solid var(--border-light); object-fit: cover; padding: 0.5rem; background: var(--bg-panel); }
-        
-        #research .glass-panel { display: flex; align-items: flex-start; gap: 3rem; }
-        .research-details { flex: 1; position: relative; }
-        
-        .paper-stack { position: relative; width: 180px; height: 240px; display: block; flex-shrink: 0; margin-top: 1rem; }
-        .paper-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; border: 1px solid var(--border-light); box-shadow: 2px 2px 8px rgba(0,0,0,0.05); object-fit: cover; object-position: top; }
-        .paper-stack .page-3 { transform: translate(10px, 10px) rotate(3deg); }
-        .paper-stack .page-2 { transform: translate(5px, 5px) rotate(1deg); }
-        .paper-stack .page-1 { transform: translate(0, 0) rotate(0deg); }
-
-        #projects .glass-panel { padding: 2rem; }
-        .project-grid-media { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
-        .project-grid-media .project-media { flex: 1; min-width: 150px; max-height: 200px !important; object-fit: cover; }
-        .visual-gallery-stacked { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
-        .visual-gallery-stacked video { max-height: 180px !important; object-fit: cover; border: 1px solid var(--border-light); }
-
-        @media (max-width: 1024px) {
-            .layout-wrapper { flex-direction: column; }
-            .side-nav { position: relative; top: 0; bottom: auto; left: 0; width: 100%; padding: 1.5rem; flex-direction: row; flex-wrap: wrap; justify-content: center; border-right: none; border-bottom: 1px solid var(--border-light); background: var(--bg-panel); }
-            .nav-brand { width: 100%; text-align: center; margin-bottom: 1rem; justify-content: center; }
-            .nav-link.code-link { margin-top: 0; border-top: none; padding-top: 0.5rem; border-left: 1px solid var(--border-light); padding-left: 1rem; }
-            .container { margin-left: 0; padding: 2rem 1.5rem; border-left: none; border-right: none; }
-            .hero-glass { padding: 2rem 0; }
-            h1 { font-size: 2.2rem; }
-            .grid-2, .grid-skills { grid-template-columns: 1fr; gap: 2rem; }
-            .hero-inner-flex { justify-content: center; text-align: left; gap: 2rem; flex-direction: column-reverse; align-items: flex-start; }
-            .profile-photo { width: 160px; height: 160px; }
-            #research .glass-panel { flex-direction: column; gap: 2rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="page-transition-overlay"></div>
-
-    <div class="layout-wrapper">
-        
-        <nav class="side-nav">
-            <div class="nav-brand">Aryamaan Borgohain</div>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            html { scroll-behavior: smooth; }
             
-            <a href="#home" class="nav-link">Home</a>
-            <a href="#interests" class="nav-link">Research Interests</a>
-            <a href="#education" class="nav-link">Education</a>
-            <a href="#projects" class="nav-link">Engineering</a>
-            <a href="#research" class="nav-link">Research</a>
-            <a href="#art" class="nav-link">3D & Art</a>
-            <a href="#skills" class="nav-link">Expertise</a>
-            <a href="#contact" class="nav-link">Contact</a>
+            body {
+                color: var(--text-main); 
+                font-family: var(--font-sans);
+                line-height: 1.7; 
+                overflow-x: hidden; 
+                background-color: var(--bg-main);
+                background-image: linear-gradient(var(--border-light) 1px, transparent 1px),
+                                linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+                background-size: 40px 40px;
+                background-position: -1px -1px;
+                background-attachment: fixed;
+            }
+
+            ::-webkit-scrollbar { width: 8px; height: 8px; }
+            ::-webkit-scrollbar-track { background: var(--bg-main); border-left: 1px solid var(--border-light); }
+            ::-webkit-scrollbar-thumb { background: #d4cfc5; }
+            ::-webkit-scrollbar-thumb:hover { background: #b5b0a6; }
+
+            .page-transition-overlay {
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                background-color: var(--bg-main); z-index: 9999; pointer-events: none;
+                opacity: 0; transition: opacity 0.4s ease;
+            }
+            body.entering .page-transition-overlay { animation: fadeOut 0.6s forwards; }
+            body.exiting .page-transition-overlay { animation: fadeIn 0.4s forwards; }
+            @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
+            @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+            .layout-wrapper { display: flex; min-height: 100vh; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; background: var(--bg-main); box-shadow: 0 0 40px rgba(0,0,0,0.03); }
+            .container { flex: 1; padding: 3rem; margin-left: 280px; max-width: 1050px; background: var(--bg-panel); border-left: 1px solid var(--border-light); border-right: 1px solid var(--border-light); min-height: 100vh; }
+
+            .side-nav {
+                position: fixed; top: 0; bottom: 0; left: 0; width: 280px;
+                display: flex; flex-direction: column; gap: 1rem; padding: 4rem 2rem;
+                background: var(--bg-main); z-index: 100;
+            }
             
-        </nav>
+            .nav-brand { display: flex; align-items: center; font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 2.5rem; letter-spacing: 0.5px; color: var(--text-main); }
+            .status-dot { display: inline-block; width: 6px; height: 6px; background-color: var(--accent-primary); border-radius: 50%; margin-left: 10px; }
 
-        <main class="container">
+            .nav-link { position: relative; display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-sans); font-size: 0.95rem; transition: all 0.2s ease; padding: 0.5rem 0; }
+            .nav-link svg { width: 16px; height: 16px; stroke-width: 1.5px; transition: color 0.2s ease; }
+            .nav-link:hover { color: var(--accent-primary); padding-left: 5px; }
             
-            <header class="hero" id="home">
-                <div class="hero-glass hero-inner-flex">
-                    <div style="flex: 1; min-width: 300px;">
-                        <h1>Aryamaan Borgohain<span class="blinking-cursor">|</span></h1>
-                        <p class="subtitle">Undergrad Mathematics Major</p>
-                        <p class="bio">
-                            Hey, I am Aryamaan, an undergrad math major interested in Scientific Computing, Computer Graphics, Numerical Methods, and Orbital Mechanics.<br><br>
-                            I started out self-learning through YouTube, tinkering with 3D assets and software using Unity, C#, and Blender. Today my focus has shifted mainly to making simulations of various dynamic systems and visualisations of algorithms, specifically within the domains of celestial mechanics, linear algebra, and graphics programming. I am also learning Theoretical Computer Science and exploring my interests there.
-                        </p>
-                        <div style="display: flex; flex-wrap: wrap;">
-                            <a href="assets/CV_Aryamaan.pdf" target="_blank" class="btn">
-                                Look at my CV
-                            </a>
-                            <a href="#projects" class="btn">
-                                View Projects
-                            </a>
-                        </div>
-                    </div>
-                    <div>
-                        <img src="assets/profile_photo.jpg" alt="Aryamaan Borgohain" class="profile-photo">
-                    </div>
-                </div>
-            </header>
+            .nav-link.code-link {
+                margin-top: auto; color: var(--text-main); font-family: var(--font-mono);
+                font-size: 0.85rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;
+            }
+            .nav-link.code-link:hover { color: var(--accent-secondary); }
 
-            <section id="interests">
-                <h2 class="section-title" style="margin-top: 0;">Research Interests (Elemetary!)</h2>
-                <div class="glass-panel" style="padding: 1.5rem 2.5rem; margin-bottom: 4rem;">
-                    <div class="sub-tags" style="gap: 1rem;">
-                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Analysis</span>
-                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Celestial Mechanics (Astrodynamics)</span>
-                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Linear Algebra</span>
-<span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Theory of Computation</span>
-                    </div>
-                </div>
-            </section>
+            h1 { font-family: var(--font-serif); font-size: 3rem; letter-spacing: -0.5px; margin-bottom: 0.5rem; color: var(--text-main); line-height: 1.2; font-weight: 700; }
+            .blinking-cursor { font-weight: 400; animation: blink 1s step-end infinite; }
+            @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-            <section id="education">
-                <h2 class="section-title" style="margin-top: 0;">Education</h2>
-                <div class="glass-panel adapative">
-                    <div class="timeline-item">
-                        <div class="timeline-header">
-                            <div class="timeline-title">
-                                <img src="assets/uni_logo.png" alt="Tezpur University Logo" class="timeline-logo">
-                                Tezpur University
-                            </div>
-                            <div class="timeline-date">2025 to 2030 (Expected)</div>
-                        </div>
-                        <div class="timeline-subtitle">Integrated MSc. in Mathematics</div>
-                        
-                        <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-main); margin-top: 1.5rem; font-weight: 600; text-transform: uppercase;">Notable Courses Taken</div>
-                        <div class="course-tree-horizontal">
+            h2.section-title { font-family: var(--font-serif); font-size: 1.75rem; color: var(--text-main); border-bottom: 2px solid var(--text-main); padding-bottom: 0.5rem; margin: 4rem 0 2rem 0; display: inline-flex; align-items: center; gap: 0.75rem; width: 100%; }
+            h2.section-title svg { width: 24px; height: 24px; stroke-width: 1.5px; }
+            
+            .glass-panel {
+                background: var(--bg-panel);
+                border: 1px solid var(--border-light); 
+                padding: 2.5rem;
+                margin-bottom: 2rem;
+                transition: border-color 0.2s ease;
+            }
+            .glass-panel:hover { border-color: var(--accent-primary); }
 
-			                <div class="course-node">
-                                <div class="course-node-title">MSIN201: Introductory Statistics & Probability</div>
-                                <div class="course-node-topics">Random Variables, Probability Distribution, Variance, Random Sampling, Skewness Measures...</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">MSIN202: Foundation of Mathematics</div>
-                                <div class="course-node-topics">Set theory, Statements, Logic, Quantifiers, Zorn's Lemma, Mathematical Induction...</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">MSIN203: Analysis-I</div>
-                                <div class="course-node-topics">Real Numbers, LUB Property, Density Theorem, Leibniz Notation, Sequences...</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">MSIN204: Group Theory</div>
-                                <div class="course-node-topics">Groups, Cosets, Lagrange Theorem, Isomorphisms, Permutation and Cyclic Groups, Modular Arithmetic...</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">MBIN209: Introduction to Computing</div>
-                                <div class="course-node-topics">Von-Neumann and Harvard Architecture, Data Communication, Number Systems and Arithmetic, C programming, Conditional Statements, ...</div>
-                            </div>
+            .hero-glass { padding: 3rem 0; border: none; border-bottom: 1px solid var(--border-light); background: transparent; margin-bottom: 2rem; }
+            .hero-glass:hover { border-color: var(--border-light); }
 
+            .btn { display: inline-flex; align-items: center; background: transparent; color: var(--text-main); border: 1px solid var(--border-dark); padding: 0.6rem 1.2rem; text-decoration: none; font-family: var(--font-sans); font-size: 0.9rem; margin-right: 1rem; margin-top: 1.5rem; transition: all 0.2s ease; }
+            .btn:hover { background: var(--border-dark); color: var(--bg-panel); }
+            .btn svg { width: 16px; height: 16px; margin-right: 8px; }
 
-                            <div class="course-node">
-                                <div class="course-node-title">MSIN101: Mathematics I</div>
-                                <div class="course-node-topics">Introductory Real Analysis, Calculus II, Ordinary Differential Equations</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">MSIN102: Mathematics II</div>
-                                <div class="course-node-topics">Calculus III, Introductory Linear Algebra</div>
-                            </div>
-                            <div class="course-node">
-                                <div class="course-node-title">SEEC1005: Statistics & Data</div>
-                                <div class="course-node-topics">Advanced Excel, ANOVA, JAMOVI, Statistical Tests (Mann Whitney, Wilcoxon Signed Rank, t-test)</div>
-                            </div>
-                        </div>
-                    </div>
+            .hero { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+            .hero p.subtitle { font-family: var(--font-mono); font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-muted); }
+            .hero p.bio { color: var(--text-main); font-size: 1.05rem; max-width: 750px; line-height: 1.8; }
 
-                    <div class="timeline-item" style="margin-bottom: 0;">
-                        <div class="timeline-header">
-                            <div class="timeline-title">
-                                <img src="assets/ssa_logo.png" alt="Shrimanta Shankar Academy Logo" class="timeline-logo">
-                                Shrimanta Shankar Academy, Guwahati
-                            </div>
-                            <div class="timeline-date">2012 to 2025</div>
-                        </div>
-                        <div class="timeline-subtitle">AISSCE & AISSE</div>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
-                            Completed secondary and senior secondary school.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            .badge-new {
+                display: inline-block;
+                background: var(--bg-main);
+                border: 1px solid var(--accent-secondary);
+                color: var(--accent-secondary);
+                padding: 0.15rem 0.5rem;
+                font-size: 0.7rem;
+                font-family: var(--font-mono);
+                margin-left: 0.75rem;
+                vertical-align: middle;
+                font-weight: 600;
+            }
 
-            <section id="projects">
-                <h2 class="section-title">Some of my major projects</h2>
+            .badge-date {
+                display: inline-block;
+                color: var(--text-muted);
+                font-size: 0.85rem;
+                font-family: var(--font-mono);
+                margin-left: 0.75rem;
+                vertical-align: middle;
+            }
+
+            .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+            .grid-skills { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; }
+
+            .project-title { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main); }
+            .project-title svg { width: 20px; height: 20px; color: var(--text-main); }
+            .project-tech { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; border-bottom: 1px dotted var(--border-light); padding-bottom: 0.5rem; }
+            .project-desc p { font-size: 0.95rem; margin-bottom: 0.75rem; }
+            .project-desc ul { font-size: 0.95rem; list-style-type: square; padding-left: 1.5rem; margin-bottom: 1rem; }
+            .project-desc ul li { margin-bottom: 0.4rem; color: var(--text-main); }
+            .project-desc strong { font-weight: 600; color: var(--text-main); }
+
+            .timeline-item { margin-bottom: 2rem; }
+            .timeline-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem; }
+            .timeline-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.1rem; font-family: var(--font-serif); }
+            .timeline-title svg { width: 18px; height: 18px; color: var(--text-main); }
+            .timeline-subtitle { font-family: var(--font-sans); font-size: 0.95rem; color: var(--text-main); margin-top: 0.5rem; font-style: italic;}
+            .timeline-date { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+            
+            /* Newly Added CSS for logos */
+            .timeline-logo {
+                height: 36px;
+                width: auto;
+                object-fit: contain;
+                border-radius: 4px;
+            }
+
+            .course-tree-horizontal { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+            .course-node { background: var(--bg-main); border: 1px solid var(--border-light); padding: 1rem; }
+            .course-node-title { color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.25rem;}
+            .course-node-topics { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
+            .skill-group { margin-bottom: 1.5rem; }
+            .skill-main { display: flex; align-items: center; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600; }
+            .skill-icon { width: 16px; height: 16px; margin-right: 8px; color: var(--text-muted); }
+            
+            .sub-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+            .sub-tag { background: var(--bg-panel); border: 1px solid var(--border-light); padding: 0.2rem 0.5rem; font-family: var(--font-sans); font-size: 0.8rem; color: var(--text-muted); }
+
+            .project-media { width: 100%; border: 1px solid var(--border-light); display: block; margin-bottom: 0.5rem; }
+            
+            .poster-container { margin-bottom: 1rem; }
+            .poster-container img { display: block; width: 100%; border: 1px solid var(--border-light); }
+
+            .visual-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+            .gallery-img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--border-light); }
+
+            .video-carousel {
+                display: flex;
+                overflow-x: auto;
+                gap: 1rem;
+                margin-top: 1rem;
+                padding-bottom: 1rem;
+                scroll-snap-type: x mandatory;
+            }
+            .video-carousel::-webkit-scrollbar { height: 6px; }
+            
+            .video-carousel video {
+                flex: 0 0 100%;
+                max-height: 360px;
+                object-fit: cover;
+                border: 1px solid var(--border-light);
+                scroll-snap-align: center;
+            }
+
+            .social-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; background: transparent; border: 1px solid var(--border-light); padding: 0.8rem 2rem; color: var(--text-main); text-decoration: none; font-family: var(--font-sans); font-size: 0.9rem; transition: all 0.2s ease; flex: 1; min-width: 180px; }
+            .social-btn:hover { background: var(--bg-main); border-color: var(--border-dark); }
+            .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+            footer { margin-top: 5rem; padding: 2rem 0; border-top: 1px solid var(--border-light); text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+
+            .hero-inner-flex { display: flex; gap: 3rem; align-items: center; justify-content: space-between; flex-wrap: wrap-reverse; }
+            .profile-photo { max-width: 250px; height: auto; border: 1px solid var(--border-light); padding: 0.5rem; background: var(--bg-panel); }
+            
+            #research .glass-panel { display: flex; align-items: flex-start; gap: 3rem; }
+            .research-details { flex: 1; position: relative; }
+            
+            .paper-stack { position: relative; width: 180px; height: 240px; display: block; flex-shrink: 0; margin-top: 1rem; }
+            .paper-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; border: 1px solid var(--border-light); box-shadow: 2px 2px 8px rgba(0,0,0,0.05); object-fit: cover; object-position: top; }
+            .paper-stack .page-3 { transform: translate(10px, 10px) rotate(3deg); }
+            .paper-stack .page-2 { transform: translate(5px, 5px) rotate(1deg); }
+            .paper-stack .page-1 { transform: translate(0, 0) rotate(0deg); }
+
+            #projects .glass-panel { padding: 2rem; }
+            .project-grid-media { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+            .project-grid-media .project-media { flex: 1; min-width: 150px; max-height: 200px !important; object-fit: cover; }
+            .visual-gallery-stacked { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+            .visual-gallery-stacked video { max-height: 180px !important; object-fit: cover; border: 1px solid var(--border-light); }
+
+            @media (max-width: 1024px) {
+                .layout-wrapper { flex-direction: column; }
+                .side-nav { position: relative; top: 0; bottom: auto; left: 0; width: 100%; padding: 1.5rem; flex-direction: row; flex-wrap: wrap; justify-content: center; border-right: none; border-bottom: 1px solid var(--border-light); background: var(--bg-panel); }
+                .nav-brand { width: 100%; text-align: center; margin-bottom: 1rem; justify-content: center; }
+                .nav-link.code-link { margin-top: 0; border-top: none; padding-top: 0.5rem; border-left: 1px solid var(--border-light); padding-left: 1rem; }
+                .container { margin-left: 0; padding: 2rem 1.5rem; border-left: none; border-right: none; }
+                .hero-glass { padding: 2rem 0; }
+                h1 { font-size: 2.2rem; }
+                .grid-2, .grid-skills { grid-template-columns: 1fr; gap: 2rem; }
+                .hero-inner-flex { justify-content: center; text-align: left; gap: 2rem; flex-direction: column-reverse; align-items: flex-start; }
+                .profile-photo { width: 160px; height: 160px; }
+                #research .glass-panel { flex-direction: column; gap: 2rem; }
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="page-transition-overlay"></div>
+
+        <div class="layout-wrapper">
+            
+            <nav class="side-nav">
+                <div class="nav-brand">Aryamaan Borgohain</div>
                 
-                <div class="grid-2">
-                    <div class="glass-panel">
-                        <h3 class="project-title">
-                            OrbitForge: Celestial Mechanics Engine
-                            <span class="badge-new">NEW</span>
-                        </h3>
-                        <div class="project-tech">C++ | Python | OpenCV | Lamberts BVP | Verlet Integration | Encke's Method</div>
-                        
-                        <div class="poster-container">
-                            <img src="assets/poster landscape.png" alt="OrbitForge Poster">
-                        </div>
-
-                        <div class="project-desc">
-                            <p>A celestial mechanics and orbital math suite I built to solve boundary value problems (BVP) using the <strong>Lancaster and Blanchard method (NASA 1969)</strong>.</p>
-                            <ul>
-                                <li><strong>Physics Backend:</strong> Universal Variables and Newton-Raphson iteration on a dynamically calculated Jacobian matrix.</li>
-                                <li><strong>Numerical Stability:</strong> Encke's Method for N-body perturbations and Symplectic Velocity-Verlet integration.</li>
-                                <li><strong>Parallelized Pipeline:</strong> Memory-optimized C++ core feeding into a CSV for a multiprocessed Python pipeline visualization.</li>
-                            </ul>
-                        </div>
-
-                        <div class="project-grid-media">
-                            <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; width: 100%; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light);">FIG 1. SIMULATION TELEMETRY</p>
-                            <img src="assets/mercury-final.gif" alt="Mercury Flyby Simulation" class="project-media">
-                            <img src="assets/mars-final.gif" alt="Mars Trajectory Simulation" class="project-media">
-                            <img src="assets/jupiter-final.gif" alt="Jupiter Trajectory Simulation" class="project-media">
-                        </div>
-                    </div>
-
-                    <div class="glass-panel">
-                        <h3 class="project-title">
-                            Computational Math Visualization
-                        </h3>
-                        <div class="project-tech">Python | NumPy | SciPy | Multiprocessing | Matplotlib</div>
-                        <div class="project-desc">
-                            <p>A collection of tools I built to visualize the math concepts I was learning, rather than just rote-memorizing them. It helps build a real geometric intuition for algebra and calculus.</p>
-                            <ul>
-                                <li><strong>Surface Rendering:</strong> Z-order chunk rendering algorithm using manually calculated surface normals for accurate depth buffering.</li>
-                                <li><strong>Performance:</strong> Python multiprocessing pipeline achieving a 10x speedup in frame sequence rendering.</li>
-                                <li><strong>Algorithm Verification:</strong> Included an empirical O(N³) verification of Gaussian Elimination operation cost via least-squares polynomial curve fitting.</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="visual-gallery-stacked">
-                            <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; width: 100%; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light);">FIG 2. SURFACE NORMALS</p>
-                            <video autoplay loop muted playsinline class="project-media">
-                                <source src="assets/normals_abs_power.mp4" type="video/mp4">
-                            </video>
-                            <video autoplay loop muted playsinline class="project-media">
-                                <source src="assets/normal_iterative_sin.mp4" type="video/mp4">
-                            </video>
-                            <video autoplay loop muted playsinline class="project-media">
-                                <source src="assets/Iterative_sin.mp4" type="video/mp4">
-                            </video>
-                            <video autoplay loop muted playsinline class="project-media">
-                                <source src="assets/normals_sin_sqrt.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="research">
-                <h2 class="section-title">Check out my research!</h2>
-                <div class="glass-panel">
-                    
-                    <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="paper-stack">
-                        <img src="assets/ivp3.png" class="paper-page page-3" alt="Paper Page 3">
-                        <img src="assets/ivp2.png" class="paper-page page-2" alt="Paper Page 2">
-                        <img src="assets/ivp1.png" class="paper-page page-1" alt="Paper Page 1">
-                    </a>
-
-                    <div class="research-details">
-                        
-                        <h3 style="font-family: var(--font-serif); font-weight: 700; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);">
-                            Computational Estimation of Initial Value Problems
-                        </h3>
-                        <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">[Unpublished Literature Review], December 2025</p>
-                        
-                        <p style="color: var(--text-main); font-size: 0.95rem; margin-bottom: 1rem;">An elementary literature review compiling some computational estimation techniques for Initial Value Problems. I originally did this as a side project to teach myself LaTeX.</p>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Integrates various numerical methods and visualizations ranging from RK1 to Phase Lines, Slope Fields, Taylor Series, and Picard's Method.</p>
-                        
-                        <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="btn" style="margin-top: 0;">
-                            Read full paper [PDF]
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="art">
-                <h2 class="section-title">3D Environments & Technical Art</h2>
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#interests" class="nav-link">Research Interests</a>
+                <a href="#education" class="nav-link">Education</a>
+                <a href="#projects" class="nav-link">Engineering</a>
+                <a href="#research" class="nav-link">Research</a>
+                <a href="#art" class="nav-link">3D & Art</a>
+                <a href="#skills" class="nav-link">Expertise</a>
+                <a href="#contact" class="nav-link">Contact</a>
                 
-                <div class="glass-panel" style="margin-bottom: 2rem;">
-                    <h3 class="project-title">
-                        Stonehill Road Bungalow
-                    </h3>
-                    <div class="project-tech">Unity (URP) | Blender | Level Design | Lighting | DaVinci Resolve</div>
-                    <div class="project-desc">
-                        <p>An atmospheric 3D environment of a house in the forest, originally built for a horror game concept called Profane Locus. I spent a lot of time getting the spatial composition and volumetric lighting right.</p>
-                    </div>
+            </nav>
 
-                    <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light);">CINEMATIC SHOWCASE</p>
-                    <div class="video-carousel">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/stonehill_vid1.mp4" type="video/mp4">
-                        </video>
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/stonehill_vid2.mp4" type="video/mp4">
-                        </video>
-                    </div>
-
-                    <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light);">ENVIRONMENT STILLS</p>
-                    <div class="visual-gallery" style="margin-top: 0;">
-                        <img src="assets/1.jpg" alt="Stonehill Exterior 1" class="gallery-img" loading="lazy">
-                        <img src="assets/2.jpg" alt="Stonehill Exterior 2" class="gallery-img" loading="lazy">
-                        <img src="assets/3.jpg" alt="Stonehill Forest" class="gallery-img" loading="lazy">
-                        <img src="assets/4.jpg" alt="Stonehill Church Interior" class="gallery-img" loading="lazy">
-                        <img src="assets/5.jpg" alt="Stonehill Graveyard 1" class="gallery-img" loading="lazy">
-                        <img src="assets/6.jpg" alt="Stonehill Graveyard 2" class="gallery-img" loading="lazy">
-                        <img src="assets/7.jpg" alt="Stonehill Porch" class="gallery-img" loading="lazy">
-                    </div>
-                </div>
-
-                <div class="glass-panel">
-                    <h3 class="project-title">
-                        Architectural Visualization & Prop Modeling
-                    </h3>
-                    <div class="project-tech">Blender | Unity (URP) | DaVinci Resolve | Adobe Photoshop</div>
-                    <div class="project-desc">
-                        <p>A collection of environments and props where I focused on procedural texturing, physically based rendering (PBR), and writing custom shaders.</p>
-                        <ul>
-                            <li><strong>Graphics Logic:</strong> Optimized Shader Graphs and C# scripts to simulate volumetric lighting effects in real-time.</li>
-                            <li><strong>Topology:</strong> Clean topology and optimized hard-surface modeling for game engines, ensuring non-overlapping UV mapping.</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="visual-gallery">
-                        <img src="assets/bedroom.jpg" alt="Bedroom Render 1" class="gallery-img" loading="lazy">
-                        <img src="assets/bedroom 2.jpg" alt="Bedroom Render 2" class="gallery-img" loading="lazy">
-                        <img src="assets/lounge.jpg" alt="Lounge Render" class="gallery-img" loading="lazy">
-                        <video autoplay loop muted playsinline class="gallery-img"><source src="assets/lounge 3d.mp4" type="video/mp4"></video>
-                        <img src="assets/ouija.jpg" alt="Ouija Board Prop" class="gallery-img" loading="lazy">
-                        <img src="assets/trench.jpg" alt="Trench Environment" class="gallery-img" loading="lazy">
-                        <video autoplay loop muted playsinline class="gallery-img"><source src="assets/tommy.mp4" type="video/mp4"></video>
-                    </div>
-
-                    <div style="margin-top: 2rem;">
-                        <a href="https://www.artstation.com/maggiethegsd" target="_blank" class="btn" style="margin: 0;">
-                            View Portfolio on ArtStation
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <div class="grid-skills">
-                <section id="skills">
-                    <h2 class="section-title">Technical Expertise</h2>
-                    <div class="glass-panel" style="height: 100%;">
-                        
-                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">I. SYSTEMS & COMPUTING</h3>
-                        
-                        <div class="skill-group">
-                            <div class="skill-main">C++</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">Memory Management</span>
-                                <span class="sub-tag">Physics Backend</span>
-                                <span class="sub-tag">File Streams & I/O</span>
-                                <span class="sub-tag">Pointer Arithmetic</span>
+            <main class="container">
+                
+                <header class="hero" id="home">
+                    <div class="hero-glass hero-inner-flex">
+                        <div style="flex: 1; min-width: 300px;">
+                            <h1>Aryamaan Borgohain<span class="blinking-cursor">|</span></h1>
+                            <p class="subtitle">Undergrad Mathematics Major</p>
+                            <p class="bio">
+                                Hey, I am Aryamaan, an undergrad math major interested in Scientific Computing, Computer Graphics, Numerical Methods, and Orbital Mechanics.<br><br>
+                                I started out self-learning through YouTube, tinkering with 3D assets and software using Unity, C#, and Blender. Today my focus has shifted mainly to making simulations of various dynamic systems and visualisations of algorithms, specifically within the domains of celestial mechanics, linear algebra, and graphics programming. I am also learning Theoretical Computer Science and exploring my interests there.
+                            </p>
+                            <div style="display: flex; flex-wrap: wrap;">
+                                <a href="assets/CV_Aryamaan.pdf" target="_blank" class="btn">
+                                    Look at my CV
+                                </a>
+                                <a href="#projects" class="btn">
+                                    View Projects
+                                </a>
                             </div>
                         </div>
-
-                        <div class="skill-group">
-                            <div class="skill-main">Python</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">NumPy</span>
-                                <span class="sub-tag">SciPy & SymPy</span>
-                                <span class="sub-tag">Matplotlib</span>
-                                <span class="sub-tag">OpenCV</span>
-                                <span class="sub-tag">Multiprocessing</span>
-                            </div>
+                        <div>
+                            <img src="assets/profile_photo.jpg" alt="Aryamaan Borgohain" class="profile-photo" ,max-width:180px height:auto>
                         </div>
+                    </div>
+                </header>
 
-                        <div class="skill-group" style="margin-bottom: 2.5rem;">
-                            <div class="skill-main">C# & Database</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">Game State Architecture</span>
-                                <span class="sub-tag">SQL & Relational Logic</span>
-                                <span class="sub-tag">Tkinter (GUI)</span>
-                            </div>
+                <section id="interests">
+                    <h2 class="section-title" style="margin-top: 0;">Research Interests (Elemetary!)</h2>
+                    <div class="glass-panel" style="padding: 1.5rem 2.5rem; margin-bottom: 4rem;">
+                        <div class="sub-tags" style="gap: 1rem;">
+                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Analysis</span>
+                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Celestial Mechanics (Astrodynamics)</span>
+                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Linear Algebra</span>
+    <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Theory of Computation</span>
                         </div>
-
-                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">II. GRAPHICS & ENGINES</h3>
-
-                        <div class="skill-group">
-                            <div class="skill-main">Unity Engine</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">Universal Render Pipeline (URP)</span>
-                                <span class="sub-tag">Shader Graphs</span>
-                                <span class="sub-tag">Lighting & Volumetrics</span>
-                                <span class="sub-tag">ProBuilder</span>
-                            </div>
-                        </div>
-
-                        <div class="skill-group" style="margin-bottom: 2.5rem;">
-                            <div class="skill-main">Technical Art</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">Blender 3D</span>
-                                <span class="sub-tag">Hard-Surface Modeling</span>
-                                <span class="sub-tag">Procedural Texturing</span>
-                                <span class="sub-tag">DaVinci Resolve</span>
-                            </div>
-                        </div>
-
-                        <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">III. MATHEMATICS</h3>
-
-                        <div class="skill-group" style="margin-bottom: 0;">
-                            <div class="skill-main">Applied Domains</div>
-                            <div class="sub-tags">
-                                <span class="sub-tag">Celestial Mechanics</span>
-                                <span class="sub-tag">Linear Algebra</span>
-                                <span class="sub-tag">Real Analysis</span>
-                                <span class="sub-tag">Runge-Kutta Methods</span>
-                                <span class="sub-tag">Boundary Value Problems</span>
-                            </div>
-                        </div>
-
                     </div>
                 </section>
 
-                <section id="certifications">
-                    <h2 class="section-title">Certifications</h2>
-                    <div class="glass-panel" style="height: 100%;">
-			
-
-			<div class="timeline-item">
-                            <div class="timeline-header">
-                                <div class="timeline-title">
-                                    <img src="assets/iitp_logo.png" alt="IIT Patna Logo" class="timeline-logo">
-                                    <img src="assets/mtts_logo.png" alt="MTTS Logo" class="timeline-logo">
-                                    Initiation into Mathematics 2026 at Indian Institute of Technology, Patna
-                                </div>
-                            </div>
-                            <div class="timeline-subtitle">Mathematics Training & Talent Search (MTTS) Trust, funded by the National Board for Higher Mathematics (NBHM)</div>
-                            <a href="assets/mtts initmath cert.pdf" target="_blank" class="btn" style="margin-top: 1rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
-                                View Certificate
-                            </a>
-                        </div>
-
+                <section id="education">
+                    <h2 class="section-title" style="margin-top: 0;">Education</h2>
+                    <div class="glass-panel adapative">
                         <div class="timeline-item">
                             <div class="timeline-header">
                                 <div class="timeline-title">
-                                    <img src="assets/ucboulder_logo.png" alt="University of Colorado Boulder Logo" class="timeline-logo">
-                                    <img src="assets/coursera_logo.png" alt="Coursera Logo" class="timeline-logo">
-                                    Introduction to Scientific Computing with Python
+                                    <img src="assets/uni_logo.png" alt="Tezpur University Logo" class="timeline-logo">
+                                    Tezpur University
+                                </div>
+                                <div class="timeline-date">2025 to 2030 (Expected)</div>
+                            </div>
+                            <div class="timeline-subtitle">Integrated MSc. in Mathematics</div>
+                            
+                            <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-main); margin-top: 1.5rem; font-weight: 600; text-transform: uppercase;">Notable Courses Taken</div>
+                            <div class="course-tree-horizontal">
+
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN201: Introductory Statistics & Probability</div>
+                                    <div class="course-node-topics">Random Variables, Probability Distribution, Variance, Random Sampling, Skewness Measures...</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN202: Foundation of Mathematics</div>
+                                    <div class="course-node-topics">Set theory, Statements, Logic, Quantifiers, Zorn's Lemma, Mathematical Induction...</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN203: Analysis-I</div>
+                                    <div class="course-node-topics">Real Numbers, LUB Property, Density Theorem, Leibniz Notation, Sequences...</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN204: Group Theory</div>
+                                    <div class="course-node-topics">Groups, Cosets, Lagrange Theorem, Isomorphisms, Permutation and Cyclic Groups, Modular Arithmetic...</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">MBIN209: Introduction to Computing</div>
+                                    <div class="course-node-topics">Von-Neumann and Harvard Architecture, Data Communication, Number Systems and Arithmetic, C programming, Conditional Statements, ...</div>
+                                </div>
+
+
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN101: Mathematics I</div>
+                                    <div class="course-node-topics">Introductory Real Analysis, Calculus II, Ordinary Differential Equations</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">MSIN102: Mathematics II</div>
+                                    <div class="course-node-topics">Calculus III, Introductory Linear Algebra</div>
+                                </div>
+                                <div class="course-node">
+                                    <div class="course-node-title">SEEC1005: Statistics & Data</div>
+                                    <div class="course-node-topics">Advanced Excel, ANOVA, JAMOVI, Statistical Tests (Mann Whitney, Wilcoxon Signed Rank, t-test)</div>
                                 </div>
                             </div>
-                            <div class="timeline-subtitle">University of Colorado Boulder (Coursera)</div>
-                            <a href="https://www.coursera.org/account/accomplishments/verify/MJ0PWZDRGY63" target="_blank" class="btn" style="margin-top: 1rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
-                                View Certificate
-                            </a>
                         </div>
 
-                        <div class="timeline-item" style="margin-bottom: 0; margin-top: 2.5rem;">
+                        <div class="timeline-item" style="margin-bottom: 0;">
                             <div class="timeline-header">
                                 <div class="timeline-title">
-                                    AISSCE 2025 CS Project
+                                    <img src="assets/ssa_logo.png" alt="Shrimanta Shankar Academy Logo" class="timeline-logo">
+                                    Shrimanta Shankar Academy, Guwahati
                                 </div>
-                                <div class="timeline-date">2024 to 2025</div>
+                                <div class="timeline-date">2012 to 2025</div>
                             </div>
-                            <div class="timeline-subtitle">Institute Management Software (Python/SQL)</div>
+                            <div class="timeline-subtitle">AISSCE & AISSE</div>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                                Completed secondary and senior secondary school.
+                            </p>
                         </div>
                     </div>
                 </section>
-            </div>
 
-            <section id="contact">
-                <h2 class="section-title">Get in Touch</h2>
-                <div class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
-                    <p style="color: var(--text-main); margin-bottom: 2.5rem; max-width: 650px; margin-left: auto; margin-right: auto; font-size: 1.05rem;">
-                        I am up anytime for research collaborations, building simulations, games, dynamic systems, and discussions in computational mathematics, graphics architecture, linear algebra, any of my projects, anything really!
-                    </p>
+                <section id="projects">
+                    <h2 class="section-title">Some of my major projects</h2>
                     
-                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 800px; margin: 0 auto;">
-                        <a href="https://github.com/Maggiethegsd" target="_blank" class="social-btn">GitHub</a>
-                        <a href="https://www.linkedin.com/in/aryamaan-borgohain/" target="_blank" class="social-btn">LinkedIn</a>
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=msi25005@tezu.ac.in" target="_blank" rel="noopener noreferrer" class="social-btn">University Email</a>
+                    <div class="grid-2">
+                        <div class="glass-panel">
+                            <h3 class="project-title">
+                                OrbitForge: Celestial Mechanics Engine
+                                <span class="badge-new">NEW</span>
+                            </h3>
+                            <div class="project-tech">C++ | Python | OpenCV | Lamberts BVP | Verlet Integration | Encke's Method</div>
+                            
+                            <div class="poster-container">
+                                <img src="assets/poster landscape.png" alt="OrbitForge Poster">
+                            </div>
+
+                            <div class="project-desc">
+                                <p>A celestial mechanics and orbital math suite I built to solve boundary value problems (BVP) using the <strong>Lancaster and Blanchard method (NASA 1969)</strong>.</p>
+                                <ul>
+                                    <li><strong>Physics Backend:</strong> Universal Variables and Newton-Raphson iteration on a dynamically calculated Jacobian matrix.</li>
+                                    <li><strong>Numerical Stability:</strong> Encke's Method for N-body perturbations and Symplectic Velocity-Verlet integration.</li>
+                                    <li><strong>Parallelized Pipeline:</strong> Memory-optimized C++ core feeding into a CSV for a multiprocessed Python pipeline visualization.</li>
+                                </ul>
+                            </div>
+
+                            <div class="project-grid-media">
+                                <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; width: 100%; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light);">FIG 1. SIMULATION TELEMETRY</p>
+                                <img src="assets/mercury-final.gif" alt="Mercury Flyby Simulation" class="project-media">
+                                <img src="assets/mars-final.gif" alt="Mars Trajectory Simulation" class="project-media">
+                                <img src="assets/jupiter-final.gif" alt="Jupiter Trajectory Simulation" class="project-media">
+                            </div>
+                        </div>
+
+                        <div class="glass-panel">
+                            <h3 class="project-title">
+                                Computational Math Visualization
+                            </h3>
+                            <div class="project-tech">Python | NumPy | SciPy | Multiprocessing | Matplotlib</div>
+                            <div class="project-desc">
+                                <p>A collection of tools I built to visualize the math concepts I was learning, rather than just rote-memorizing them. It helps build a real geometric intuition for algebra and calculus.</p>
+                                <ul>
+                                    <li><strong>Surface Rendering:</strong> Z-order chunk rendering algorithm using manually calculated surface normals for accurate depth buffering.</li>
+                                    <li><strong>Performance:</strong> Python multiprocessing pipeline achieving a 10x speedup in frame sequence rendering.</li>
+                                    <li><strong>Algorithm Verification:</strong> Included an empirical O(N³) verification of Gaussian Elimination operation cost via least-squares polynomial curve fitting.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="visual-gallery-stacked">
+                                <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; width: 100%; margin-bottom: 0.25rem; border-bottom: 1px solid var(--border-light);">FIG 2. SURFACE NORMALS</p>
+                                <video autoplay loop muted playsinline class="project-media">
+                                    <source src="assets/normals_abs_power.mp4" type="video/mp4">
+                                </video>
+                                <video autoplay loop muted playsinline class="project-media">
+                                    <source src="assets/normal_iterative_sin.mp4" type="video/mp4">
+                                </video>
+                                <video autoplay loop muted playsinline class="project-media">
+                                    <source src="assets/Iterative_sin.mp4" type="video/mp4">
+                                </video>
+                                <video autoplay loop muted playsinline class="project-media">
+                                    <source src="assets/normals_sin_sqrt.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
                     </div>
+                </section>
+
+                <section id="research">
+                    <h2 class="section-title">Check out my research!</h2>
+                    <div class="glass-panel">
+                        
+                        <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="paper-stack">
+                            <img src="assets/ivp3.png" class="paper-page page-3" alt="Paper Page 3">
+                            <img src="assets/ivp2.png" class="paper-page page-2" alt="Paper Page 2">
+                            <img src="assets/ivp1.png" class="paper-page page-1" alt="Paper Page 1">
+                        </a>
+
+                        <div class="research-details">
+                            
+                            <h3 style="font-family: var(--font-serif); font-weight: 700; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);">
+                                Computational Estimation of Initial Value Problems
+                            </h3>
+                            <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">[Unpublished Literature Review], December 2025</p>
+                            
+                            <p style="color: var(--text-main); font-size: 0.95rem; margin-bottom: 1rem;">An elementary literature review compiling some computational estimation techniques for Initial Value Problems. I originally did this as a side project to teach myself LaTeX.</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Integrates various numerical methods and visualizations ranging from RK1 to Phase Lines, Slope Fields, Taylor Series, and Picard's Method.</p>
+                            
+                            <a href="assets/Comp_Est_IVP.pdf" target="_blank" class="btn" style="margin-top: 0;">
+                                Read full paper [PDF]
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="art">
+                    <h2 class="section-title">3D Environments & Technical Art</h2>
+                    
+                    <div class="glass-panel" style="margin-bottom: 2rem;">
+                        <h3 class="project-title">
+                            Stonehill Road Bungalow
+                        </h3>
+                        <div class="project-tech">Unity (URP) | Blender | Level Design | Lighting | DaVinci Resolve</div>
+                        <div class="project-desc">
+                            <p>An atmospheric 3D environment of a house in the forest, originally built for a horror game concept called Profane Locus. I spent a lot of time getting the spatial composition and volumetric lighting right.</p>
+                        </div>
+
+                        <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light);">CINEMATIC SHOWCASE</p>
+                        <div class="video-carousel">
+                            <video autoplay loop muted playsinline>
+                                <source src="assets/stonehill_vid1.mp4" type="video/mp4">
+                            </video>
+                            <video autoplay loop muted playsinline>
+                                <source src="assets/stonehill_vid2.mp4" type="video/mp4">
+                            </video>
+                        </div>
+
+                        <p style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-light);">ENVIRONMENT STILLS</p>
+                        <div class="visual-gallery" style="margin-top: 0;">
+                            <img src="assets/1.jpg" alt="Stonehill Exterior 1" class="gallery-img" loading="lazy">
+                            <img src="assets/2.jpg" alt="Stonehill Exterior 2" class="gallery-img" loading="lazy">
+                            <img src="assets/3.jpg" alt="Stonehill Forest" class="gallery-img" loading="lazy">
+                            <img src="assets/4.jpg" alt="Stonehill Church Interior" class="gallery-img" loading="lazy">
+                            <img src="assets/5.jpg" alt="Stonehill Graveyard 1" class="gallery-img" loading="lazy">
+                            <img src="assets/6.jpg" alt="Stonehill Graveyard 2" class="gallery-img" loading="lazy">
+                            <img src="assets/7.jpg" alt="Stonehill Porch" class="gallery-img" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <h3 class="project-title">
+                            Architectural Visualization & Prop Modeling
+                        </h3>
+                        <div class="project-tech">Blender | Unity (URP) | DaVinci Resolve | Adobe Photoshop</div>
+                        <div class="project-desc">
+                            <p>A collection of environments and props where I focused on procedural texturing, physically based rendering (PBR), and writing custom shaders.</p>
+                            <ul>
+                                <li><strong>Graphics Logic:</strong> Optimized Shader Graphs and C# scripts to simulate volumetric lighting effects in real-time.</li>
+                                <li><strong>Topology:</strong> Clean topology and optimized hard-surface modeling for game engines, ensuring non-overlapping UV mapping.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="visual-gallery">
+                            <img src="assets/bedroom.jpg" alt="Bedroom Render 1" class="gallery-img" loading="lazy">
+                            <img src="assets/bedroom 2.jpg" alt="Bedroom Render 2" class="gallery-img" loading="lazy">
+                            <img src="assets/lounge.jpg" alt="Lounge Render" class="gallery-img" loading="lazy">
+                            <video autoplay loop muted playsinline class="gallery-img"><source src="assets/lounge 3d.mp4" type="video/mp4"></video>
+                            <img src="assets/ouija.jpg" alt="Ouija Board Prop" class="gallery-img" loading="lazy">
+                            <img src="assets/trench.jpg" alt="Trench Environment" class="gallery-img" loading="lazy">
+                            <video autoplay loop muted playsinline class="gallery-img"><source src="assets/tommy.mp4" type="video/mp4"></video>
+                        </div>
+
+                        <div style="margin-top: 2rem;">
+                            <a href="https://www.artstation.com/maggiethegsd" target="_blank" class="btn" style="margin: 0;">
+                                View Portfolio on ArtStation
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="grid-skills">
+                    <section id="skills">
+                        <h2 class="section-title">Technical Expertise</h2>
+                        <div class="glass-panel" style="height: 100%;">
+                            
+                            <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">I. SYSTEMS & COMPUTING</h3>
+                            
+                            <div class="skill-group">
+                                <div class="skill-main">C++</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">Memory Management</span>
+                                    <span class="sub-tag">Physics Backend</span>
+                                    <span class="sub-tag">File Streams & I/O</span>
+                                    <span class="sub-tag">Pointer Arithmetic</span>
+                                </div>
+                            </div>
+
+                            <div class="skill-group">
+                                <div class="skill-main">Python</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">NumPy</span>
+                                    <span class="sub-tag">SciPy & SymPy</span>
+                                    <span class="sub-tag">Matplotlib</span>
+                                    <span class="sub-tag">OpenCV</span>
+                                    <span class="sub-tag">Multiprocessing</span>
+                                </div>
+                            </div>
+
+                            <div class="skill-group" style="margin-bottom: 2.5rem;">
+                                <div class="skill-main">C# & Database</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">Game State Architecture</span>
+                                    <span class="sub-tag">SQL & Relational Logic</span>
+                                    <span class="sub-tag">Tkinter (GUI)</span>
+                                </div>
+                            </div>
+
+                            <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">II. GRAPHICS & ENGINES</h3>
+
+                            <div class="skill-group">
+                                <div class="skill-main">Unity Engine</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">Universal Render Pipeline (URP)</span>
+                                    <span class="sub-tag">Shader Graphs</span>
+                                    <span class="sub-tag">Lighting & Volumetrics</span>
+                                    <span class="sub-tag">ProBuilder</span>
+                                </div>
+                            </div>
+
+                            <div class="skill-group" style="margin-bottom: 2.5rem;">
+                                <div class="skill-main">Technical Art</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">Blender 3D</span>
+                                    <span class="sub-tag">Hard-Surface Modeling</span>
+                                    <span class="sub-tag">Procedural Texturing</span>
+                                    <span class="sub-tag">DaVinci Resolve</span>
+                                </div>
+                            </div>
+
+                            <h3 class="timeline-title" style="margin-bottom: 1rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">III. MATHEMATICS</h3>
+
+                            <div class="skill-group" style="margin-bottom: 0;">
+                                <div class="skill-main">Applied Domains</div>
+                                <div class="sub-tags">
+                                    <span class="sub-tag">Celestial Mechanics</span>
+                                    <span class="sub-tag">Linear Algebra</span>
+                                    <span class="sub-tag">Real Analysis</span>
+                                    <span class="sub-tag">Runge-Kutta Methods</span>
+                                    <span class="sub-tag">Boundary Value Problems</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section id="certifications">
+                        <h2 class="section-title">Certifications</h2>
+                        <div class="glass-panel" style="height: 100%;">
+                
+
+                <div class="timeline-item">
+                                <div class="timeline-header">
+                                    <div class="timeline-title">
+                                        <img src="assets/iitp_logo.png" alt="IIT Patna Logo" class="timeline-logo">
+                                        <img src="assets/mtts_logo.png" alt="MTTS Logo" class="timeline-logo">
+                                        Initiation into Mathematics 2026 at Indian Institute of Technology, Patna
+                                    </div>
+                                </div>
+                                <div class="timeline-subtitle">Mathematics Training & Talent Search (MTTS) Trust, funded by the National Board for Higher Mathematics (NBHM)</div>
+                                <a href="assets/mtts initmath cert.pdf" target="_blank" class="btn" style="margin-top: 1rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                    View Certificate
+                                </a>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-header">
+                                    <div class="timeline-title">
+                                        <img src="assets/ucboulder_logo.png" alt="University of Colorado Boulder Logo" class="timeline-logo">
+                                        <img src="assets/coursera_logo.png" alt="Coursera Logo" class="timeline-logo">
+                                        Introduction to Scientific Computing with Python
+                                    </div>
+                                </div>
+                                <div class="timeline-subtitle">University of Colorado Boulder (Coursera)</div>
+                                <a href="https://www.coursera.org/account/accomplishments/verify/MJ0PWZDRGY63" target="_blank" class="btn" style="margin-top: 1rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                    View Certificate
+                                </a>
+                            </div>
+
+                            <div class="timeline-item" style="margin-bottom: 0; margin-top: 2.5rem;">
+                                <div class="timeline-header">
+                                    <div class="timeline-title">
+                                        AISSCE 2025 CS Project
+                                    </div>
+                                    <div class="timeline-date">2024 to 2025</div>
+                                </div>
+                                <div class="timeline-subtitle">Institute Management Software (Python/SQL)</div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-            </section>
 
-            <footer>
-                <p>Aryamaan Borgohain &copy; 2026. Typeset in Lora, Inter, and JetBrains Mono.</p>
-            </footer>
+                <section id="contact">
+                    <h2 class="section-title">Get in Touch</h2>
+                    <div class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
+                        <p style="color: var(--text-main); margin-bottom: 2.5rem; max-width: 650px; margin-left: auto; margin-right: auto; font-size: 1.05rem;">
+                            I am up anytime for research collaborations, building simulations, games, dynamic systems, and discussions in computational mathematics, graphics architecture, linear algebra, any of my projects, anything really!
+                        </p>
+                        
+                        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 800px; margin: 0 auto;">
+                            <a href="https://github.com/Maggiethegsd" target="_blank" class="social-btn">GitHub</a>
+                            <a href="https://www.linkedin.com/in/aryamaan-borgohain/" target="_blank" class="social-btn">LinkedIn</a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=msi25005@tezu.ac.in" target="_blank" rel="noopener noreferrer" class="social-btn">University Email</a>
+                        </div>
+                    </div>
+                </section>
 
-        </main>
-    </div>
+                <footer>
+                    <p>Aryamaan Borgohain &copy; 2026. Typeset in Lora, Inter, and JetBrains Mono.</p>
+                </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('entering');
-            setTimeout(() => { document.body.classList.remove('entering'); }, 600);
-            const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
-            transitionLinks.forEach(link => {
-                if(link.getAttribute('href').startsWith('#')) return; 
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetURL = e.currentTarget.href;
-                    document.body.classList.add('exiting');
-                    setTimeout(() => { window.location.href = targetURL; }, 400);
+            </main>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.classList.add('entering');
+                setTimeout(() => { document.body.classList.remove('entering'); }, 600);
+                const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
+                transitionLinks.forEach(link => {
+                    if(link.getAttribute('href').startsWith('#')) return; 
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetURL = e.currentTarget.href;
+                        document.body.classList.add('exiting');
+                        setTimeout(() => { window.location.href = targetURL; }, 400);
+                    });
                 });
             });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
