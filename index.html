@@ -246,43 +246,43 @@
                 
             </nav>
 
-            <main class="container">
-                
-                <header class="hero" id="home">
-                    <div class="hero-glass hero-inner-flex">
-                        <div style="flex: 1; min-width: 300px;">
-                            <h1>Aryamaan Borgohain<span class="blinking-cursor">|</span></h1>
-                            <p class="subtitle">Undergrad Mathematics Major</p>
-                            <p class="bio">
-                                Hey, I am Aryamaan, an undergrad math major interested in Scientific Computing, Computer Graphics, Numerical Methods, and Orbital Mechanics.<br><br>
-                                I started out self-learning through YouTube, tinkering with 3D assets and software using Unity, C#, and Blender. Today my focus has shifted mainly to making simulations of various dynamic systems and visualisations of algorithms, specifically within the domains of celestial mechanics, linear algebra, and graphics programming. I am also learning Theoretical Computer Science and exploring my interests there.
-                            </p>
-                            <div style="display: flex; flex-wrap: wrap;">
-                                <a href="assets/CV_Aryamaan.pdf" target="_blank" class="btn">
-                                    Look at my CV
-                                </a>
-                                <a href="#projects" class="btn">
-                                    View Projects
-                                </a>
-                            </div>
-                        </div>
-                        <div>
-                            <img src="assets/profile_photo.jpg" alt="Aryamaan Borgohain" class="profile-photo" ,max-width:180px height:auto>
+        <main class="container">
+            
+            <header class="hero" id="home">
+                <div class="hero-glass hero-inner-flex">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h1>Aryamaan Borgohain<span class="blinking-cursor">|</span></h1>
+                        <p class="subtitle">Undergrad Mathematics Major</p>
+                        <p class="bio">
+                            Hey, I am Aryamaan, an undergrad math major interested in Scientific Computing, Computer Graphics, Numerical Methods, and Orbital Mechanics.<br><br>
+                            I started out self-learning through YouTube, tinkering with 3D assets and software using Unity, C#, and Blender. Today my focus has shifted mainly to making simulations of various dynamic systems and visualisations of algorithms, specifically within the domains of celestial mechanics, linear algebra, and graphics programming. I am also learning Theoretical Computer Science and exploring my interests there.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap;">
+                            <a href="assets/CV_Aryamaan.pdf" target="_blank" class="btn">
+                                Look at my CV
+                            </a>
+                            <a href="#projects" class="btn">
+                                View Projects
+                            </a>
                         </div>
                     </div>
-                </header>
+                    <div>
+                        <img src="assets/profile_photo.jpg" alt="Aryamaan Borgohain" class="profile-photo">
+                    </div>
+                </div>
+            </header>
 
-                <section id="interests">
-                    <h2 class="section-title" style="margin-top: 0;">Research Interests (Elemetary!)</h2>
-                    <div class="glass-panel" style="padding: 1.5rem 2.5rem; margin-bottom: 4rem;">
-                        <div class="sub-tags" style="gap: 1rem;">
-                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Analysis</span>
-                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Celestial Mechanics (Astrodynamics)</span>
-                            <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Linear Algebra</span>
-    <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Theory of Computation</span>
-                        </div>
+            <section id="interests">
+                <h2 class="section-title" style="margin-top: 0;">Research Interests (Elemetary!)</h2>
+                <div class="glass-panel" style="padding: 1.5rem 2.5rem; margin-bottom: 4rem;">
+                    <div class="sub-tags" style="gap: 1rem;">
+                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Analysis</span>
+                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Celestial Mechanics (Astrodynamics)</span>
+                        <span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Numerical Linear Algebra</span>
+<span class="sub-tag" style="font-size: 0.95rem; padding: 0.4rem 1rem; color: var(--accent-primary); border-color: var(--accent-primary); font-weight: 600; background: transparent;">Theory of Computation</span>
                     </div>
-                </section>
+                </div>
+            </section>
 
                 <section id="education">
                     <h2 class="section-title" style="margin-top: 0;">Education</h2>
@@ -653,21 +653,21 @@
             </main>
         </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                document.body.classList.add('entering');
-                setTimeout(() => { document.body.classList.remove('entering'); }, 600);
-                const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
-                transitionLinks.forEach(link => {
-                    if(link.getAttribute('href').startsWith('#')) return; 
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetURL = e.currentTarget.href;
-                        document.body.classList.add('exiting');
-                        setTimeout(() => { window.location.href = targetURL; }, 400);
-                    });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('entering');
+            setTimeout(() => { document.body.classList.remove('entering'); }, 600);
+            const transitionLinks = document.querySelectorAll('.transition-link, .code-link');
+            transitionLinks.forEach(link => {
+                if(link.getAttribute('href').startsWith('#')) return; 
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetURL = e.currentTarget.href;
+                    document.body.classList.add('exiting');
+                    setTimeout(() => { window.location.href = targetURL; }, 400);
                 });
             });
-        </script>
-    </body>
-    </html>
+        });
+    </script>
+</body>
+</html>
